@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Arrow } from "@radix-ui/react-dropdown-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,6 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
+import Calendar from "./calendar/calendar";
+
 
 export default function Home() {
   return (
@@ -28,7 +31,9 @@ export default function Home() {
                 </li>
                 <li>
                 <DropdownMenu>
-                  <DropdownMenuTrigger>Services</DropdownMenuTrigger>
+                  <DropdownMenuTrigger>
+                    Services
+                  </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Services</DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -47,9 +52,7 @@ export default function Home() {
            </ul>
         </div>
     </div>
-    <footer>
-      
-    </footer>
+    <Calendar></Calendar>
     </div>
   );
 }
