@@ -85,7 +85,8 @@ export default {
   	},
   	colors: {
   		ssblue: '#57fff0',
-      ssblack: '#000000'
+      ssblack: '#000000',
+      ssgray: '#939696',
   	}
   },
   plugins: [require("tailwindcss-animate")],

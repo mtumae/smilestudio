@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image";
+import { MoveUpRight } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,8 @@ import { useSession, signOut } from "next-auth/react";
 
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { DoorOpen, LogOut, Settings, User2 } from "lucide-react";
+import { DoorOpen, LogOut, MoveRight, Settings, User2 } from "lucide-react";
+
 
 export default function Home() {
   const { data: session } = useSession();
@@ -33,11 +35,11 @@ export default function Home() {
               <a href="#" className="text-gray-900 hover:text-ssblue p-4 {{text-ssblue}}" aria-current="page">Home</a>
             </li>
             <li>
-              <a href="#" className="text-gray-900 hover:text-ssblue p-4">Practice</a>
+              <a href="/admin" className=" hover:text-ssblue p-4">Admin</a>
             </li>
             <li>
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-gray-900 hover:text-ssblue">Services</DropdownMenuTrigger>
+                <DropdownMenuTrigger className="text-gray-900 hover:text-ssblue w-auto ">Services</DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Services</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -85,7 +87,7 @@ export default function Home() {
           </ul>
         </div>
       </div>
-      <Calendar></Calendar>
+     
     </div>
   );
 }
