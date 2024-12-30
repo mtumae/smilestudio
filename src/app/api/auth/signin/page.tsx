@@ -32,9 +32,9 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("align-content-center m-10", className)} {...props}>
       <Card className="overflow-hidden">
-        <CardContent className="grid p-0 md:grid-cols-2">
+        <CardContent>
           <form className="p-6 md:p-8" onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
@@ -77,20 +77,12 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
               
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="/signup" className="underline underline-offset-4">
+                <a href="/api/auth/signup" className="underline underline-offset-4">
                   Sign up
                 </a>
               </div>
             </div>
           </form>
-          <div className="relative hidden bg-muted md:block">
-            <Image
-              src="/image.png"
-              alt="Login illustration"
-              fill
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
         </CardContent>
       </Card>
     </div>

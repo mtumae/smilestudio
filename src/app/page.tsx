@@ -30,14 +30,14 @@ export default function Home() {
         <div className="flex items-center">
           <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-black-500">
             <li>
-              <a href="#" className="text-gray-900 hover:text-ssblue p-4" aria-current="page">Home</a>
+              <a href="#" className="text-gray-900 hover:text-ssblue p-4 {{text-ssblue}}" aria-current="page">Home</a>
             </li>
             <li>
               <a href="#" className="text-gray-900 hover:text-ssblue p-4">Practice</a>
             </li>
             <li>
               <DropdownMenu>
-                <DropdownMenuTrigger>Services</DropdownMenuTrigger>
+                <DropdownMenuTrigger className="text-gray-900 hover:text-ssblue">Services</DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Services</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -77,7 +77,7 @@ export default function Home() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link href="/api/auth/signin" className="text-gray-900 hover:text-ssblue p-4">
+                <Link href="/api/auth/signup" className="text-gray-900 hover:text-ssblue p-4">
                   Login
                 </Link>
               )}
