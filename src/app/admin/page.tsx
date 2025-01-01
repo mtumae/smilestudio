@@ -5,7 +5,7 @@ import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import Home from "../page"
 import { Label, Pie, PieChart } from "recharts"
-
+import Footer from "../footer/page"
 import {
   Card,
   CardContent,
@@ -180,6 +180,7 @@ export default function Admin() {
         
         </Card>
     </div>
+    <Footer></Footer>
     </div>
   )
 }
