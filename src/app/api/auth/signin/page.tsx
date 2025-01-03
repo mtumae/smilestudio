@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     const result = await signIn("credentials", {
       email,
       password,
@@ -30,7 +32,10 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
       router.push(result.url);
     }
   };
-
+  
+  const handleSocialSignIn = (provider: "google" | "github") => {
+    void signIn(provider, { callbackUrl: "/" })
+  }
   return (
     <div className={cn("align-content-center m-10", className)} {...props}>
       <Card className="overflow-hidden">
@@ -75,16 +80,19 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
                 Login
               </Button>
               
+              
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="/api/auth/signup" className="underline underline-offset-4">
+                <Link href="/api/auth/signup" className="underline underline-offset-4">
                   Sign up
-                </a>
+                </Link>
               </div>
             </div>
           </form>
+          <Button onClick={() => handleSocialSignIn("google")}>Sign In With Google</Button>
         </CardContent>
       </Card>
+      
     </div>
   );
 }

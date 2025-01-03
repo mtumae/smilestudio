@@ -4,6 +4,7 @@ import {
   integer,
   pgTableCreator,
   primaryKey,
+  serial,
   text,
   timestamp,
   varchar,
@@ -117,6 +118,22 @@ export const sessions = createTable(
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
+export const appointments = createTable('appointments', {
+  id: serial('id').primaryKey(),
+  patientName: varchar('patient_name', { length: 255 }).notNull(),
+  patientEmail: varchar('patient_email', { length: 255 }).notNull(),
+  appointmentType: varchar('appointment_type', { length: 255 }).notNull(),
+  date: timestamp('date').notNull(),
+  startTime: timestamp('start_time').notNull(),
+  endTime: timestamp('end_time').notNull(),
+  googleEventId: varchar('google_event_id', { length: 255 }),
+});
+
+export const appointmentTypes = createTable('appointment_types', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  duration: integer('duration').notNull(), 
+});
 
 export const verificationTokens = createTable(
   "verification_token",
