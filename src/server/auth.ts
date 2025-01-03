@@ -1,11 +1,13 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { db } from "~/server/db"
-import { users } from "~/server/db/schema"
+import { users,accounts, sessions, verificationTokens } from "~/server/db/schema"
 import { eq } from "drizzle-orm"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { env } from "~/env"
 import bcryptjs from "bcryptjs"
+import Google from "next-auth/providers/google"
+import { Adapter } from "next-auth/adapters"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
@@ -32,9 +34,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return url;
         },
       },
-      adapter: DrizzleAdapter(db),
-
+      adapter: DrizzleAdapter(db, {
+        usersTable: users,
+        accountsTable: accounts,
+        sessionsTable: sessions,
+        verificationTokensTable: verificationTokens,
+      }) as Adapter,
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+      
+    }),
     Credentials({
       credentials: {
         email: { label: "Email", type: "text", placeholder: "username@gmail.com" },
@@ -74,5 +92,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: env.NODE_ENV === "development",
   pages: {
     signIn: "auth/signin",
+  },
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production'
+      }
+    }
   },
 })
