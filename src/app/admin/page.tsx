@@ -86,8 +86,8 @@ export default function Admin() {
     return (
     <div>
         <Home></Home>
-    <div className="grid grid-cols-2 gap-4 m-10">
-        <Card className="col-start-1 row-span-2">
+    <div className="grid grid-auto-fit flex-wrap gap-4 m-10">
+        <Card>
         <CardHeader>
             <CardTitle>Bar Chart</CardTitle>
             <CardDescription>January - June 2024</CardDescription>
@@ -118,7 +118,7 @@ export default function Admin() {
         </CardFooter>
         </Card>
 
-        <Card className="-col-start-2 -row-start-1 justify-center">
+        <Card className="justify-center">
         <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
@@ -172,7 +172,7 @@ export default function Admin() {
     </Card>
      
 
-        <Card className="-col-start-2 justify-center ">
+        <Card className="justify-center ">
             <Button className="m-8">Button 1</Button>
             <Button className="m-8">Button 2</Button>
             <Button className="m-8">Button 2</Button>

@@ -1,7 +1,15 @@
 "use client"
 import Image from "next/image";
-import Footer from "./footer/page";
-import { MoveUpRight } from "lucide-react";
+import { Facebook, Instagram, MoveUpRight } from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,87 +18,109 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
-import Calendar from "./calendar/calendar";
 import { useSession, signOut } from "next-auth/react";
-
+import { usePathname } from 'next/navigation';
 import Link from "next/link";
+import { Button } from "~/components/ui/button";
+import { Calendar, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { DoorOpen, LogOut, MoveRight, Settings, User2 } from "lucide-react";
+import { SocialIcon } from 'react-social-icons'
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
 
 
-export default function Home() {
+const navLinks = [
+  {name:"Home", href:"/"},
+  {name:"Admin", href:"/admin"},
+  {name:"Blog", href:"/blog"},
+  {name:"Login", href:"/api/auth/signup"},
+]
+
+
+
+export default function NavBar({ links }: { links: Array<Record<string, string>>}){
   const { data: session } = useSession();
+  const pathname = usePathname();
 
-  return (
-    <div>
-      <div className=" bg-background flex flex-wrap items-center justify-between mx-auto p-4 text-black">
-        <Image
-          alt="Smile Studio logo"
-          src="/logo.png"
-          width={200}
-          height={200}
-        />
-        <div className="flex items-center">
-          <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-black-500">
-            <li>
-              <a href="/" className="text-gray-900 hover:text-ssblue p-4 {{text-ssblue}}" aria-current="page">Home</a>
-            </li>
-            <li>
-              <a href="/admin" className=" hover:text-ssblue p-4">Admin</a>
-            </li>
-            <li>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="text-gray-900 hover:text-ssblue w-auto ">Services</DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Services</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Hygiene</DropdownMenuItem>
-                  <DropdownMenuItem>Dentistry</DropdownMenuItem>
-                  <DropdownMenuItem>Orthodontics</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </li>
-            <li>
-              <a href="/blog" className="text-gray-900 hover:text-ssblue p-4">Blog</a>
-            </li>
-            <li>
-              {session ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center">
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>{session.user.email?.charAt(0)}</AvatarFallback>
-                </Avatar>
+  const ImgStyle ={
+    backgroundImage: 'url(/Elvis.jpg)',
+  
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    borderRadius: '20px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'left',
+    padding: '20px',
+    margin: '20px',
+  };
 
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>{session.user?.name ?? "Client"}</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <User2 size={16} className="mr-2" />
-                      Profile
-                      </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Settings size={16} className="mr-2" />
-                      Settings</DropdownMenuItem>
-                    <DropdownMenuItem className="text-red" onClick={() => signOut()}>
-                      <LogOut size={16} className="mr-2" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Link href="/api/auth/signup" className="text-gray-900 hover:text-ssblue p-4">
-                  Login
-                </Link>
-              )}
-            </li>
-          </ul>
+  return(
+    <div className="overflow-x-hidden">
+      <Image 
+        src="/logo.png"
+        alt="Smile studio logo"
+        width={200}
+        height={200}></Image>
+      <ul className="w-screen flex flex-wrap">
+        
 
-        </div>
+       
+      {navLinks.map(link => {
+      const isActive = pathname === link.href;
+      return (
+        <li key={`${link.name}-${link.href}`}>
+          <Link className={isActive ? 'text-ssblue p-4 text-lg' : 'text-ssblack p-4 text-lg hover:text-ssblue'} href={link.href}>
+            { link.name }
+          </Link>
+        </li>
+        )
+        })}
+      </ul>
+
+
+      <div style={ImgStyle} className="h-96">
+        <section className="text-left w-1/2 mr-auto mt-auto text-white font-helvetica">
+        <h3 className="text-xl font-bold">We Design Bespoke Smiles</h3>
+        <p>Our core treatments include Invisalign, braces, pediatric dentistry, smile design cases and teeth whitening and cleaning.</p>
+        </section>
       </div>
-      
+
+
+
+      <div className="grid grid-auto-fit m-10 gap-4">
+        <Card className="justify-items-center border-none">
+        <Calendar className="m-10" />
+          <CardHeader className="text-xl font-bold font-helvetica">Book an appointment with us</CardHeader>
+          <CardContent>
+            <Button className="bg-ssblue">Book now</Button>
+          </CardContent>
+        </Card>
+
+        <Card className="justify-items-center border-none">
+        <Phone className="m-10" />
+          <CardHeader className="text-xl font-bold">Contact us via phone or social media</CardHeader>
+          <CardContent>
+          <Breadcrumb>
+            <BreadcrumbList className="text-ssblack">
+              <BreadcrumbItem>
+              <Facebook></Facebook>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+              <Instagram></Instagram>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="font-bold">0711 279 035</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-    
-  );
+
+
+  )
 }

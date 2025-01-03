@@ -1,7 +1,7 @@
 export default function Footer(){
     return (
         <footer>
-        <div className="bg-ssblack grid grid-cols-3 mt-28">
+        <div className="bg-ssblack grid grid-auto-fit mt-28 w-full">
               <div className="m-10">
                 <a className="text-ssgray">Office hours</a>
                   <ul className="text-white">
@@ -16,7 +16,7 @@ export default function Footer(){
               <a className="text-ssgray">Location</a>
                   <ul className="text-white">
                     <li>Smile Studio Dental Clinic</li>
-                    <li>3rd Floor, <a className="text-ssblue underline" href="#">Yaya Centre</a></li>
+                    <li>3rd Floor, <a className="text-ssblue underline" target="_blank" href="https://maps.app.goo.gl/KmQqxDPdhHk4udwh6">Yaya Centre</a></li>
                     <li>Postal Address: P. O.Box 104364-00100</li>
                     <li>Nairobi, Kenya</li>
                   </ul>

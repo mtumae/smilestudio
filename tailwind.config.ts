@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
+
 export default {
     darkMode: ["class"],
     content: ["./src/**/*.tsx"],
@@ -8,10 +9,8 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: [
-  				'var(--font-geist-sans)',
-                    ...fontFamily.sans
-                ]
+  			helvetica: ['Helvetica', 'Arial', 'sans-serif'],
+  
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -88,7 +87,11 @@ export default {
       ssblack: '#000000',
       ssgray: '#939696',
       white: '#ffffff',
+      red: '#eb2a2a'
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require('@shrutibalasa/tailwind-grid-auto-fit'),],
+  
 } satisfies Config;

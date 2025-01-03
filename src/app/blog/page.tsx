@@ -1,7 +1,6 @@
 import Home from "../page"
 import Footer from "../footer/page"
-
-import { CircleUser } from "lucide-react"
+import { Button } from "~/components/ui/button"
 import {
     Card,
     CardContent,
@@ -10,7 +9,6 @@ import {
     CardHeader,
     CardTitle,
   } from "~/components/ui/card"
-import { Line } from "recharts"
 
 
 
@@ -18,41 +16,18 @@ import { Line } from "recharts"
 export default function Blog(){
     return(
         <div>
-        <Home></Home>
-        <div className="grid grid-cols-2 m-10">
+            <Home></Home>
+        <div className="grid grid-auto-fit justify-center items-center gap-4 m-10">
 
-            
-            <div>
-                <Card className="m-10">
-                    <CardHeader>Blog posts</CardHeader>
-
-                    <CardContent>
-                        <div>
-                            <p className="italic">This is where the comment comes in...</p>
-                            <a className="text-ssgray text-sm">user gmail + date posted<CircleUser className="justify-end" /></a>
-                            
-                        </div>
-
-                    </CardContent>
-                </Card>
-            </div>
-
-
-            
-            <div>
-                <Card className="m-10">
-                    <CardHeader className="text-ssgray">Your posts</CardHeader>
-                    <CardContent>I love smile studio</CardContent>
-                  
+            <div className="grid1-item items-center">
+                <Card className="">
+                    <CardHeader>Blog</CardHeader>
                 </Card>
             </div>
 
 
 
-
         </div>
-        <Footer></Footer>
         </div>
-
     )
 }
