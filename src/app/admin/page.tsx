@@ -21,6 +21,7 @@ import {
   ChartTooltipContent,
 } from "~/components/ui/chart"
 import { Button } from "~/components/ui/button"
+import NavBar from "~/components/ui/navigation"
 
 const barchartData = [
   { month: "January", appointments: 186 },
@@ -85,8 +86,10 @@ export default function Admin() {
       }, [])
     return (
     <div>
-        <Home></Home>
+         <NavBar></NavBar>
     <div className="grid grid-auto-fit flex-wrap gap-4 m-10">
+       
+
         <Card>
         <CardHeader>
             <CardTitle>Bar Chart</CardTitle>

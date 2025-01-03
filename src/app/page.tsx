@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image";
+import { Slash, SlashIcon } from "lucide-react";
 import { Facebook, Instagram, MoveUpRight } from "lucide-react";
 import {
   Breadcrumb,
@@ -27,7 +28,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { SocialIcon } from 'react-social-icons'
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
-
+import Footer from "./footer/page";
+import NavBar from "~/components/ui/navigation";
 
 const navLinks = [
   {name:"Home", href:"/"},
@@ -38,13 +40,12 @@ const navLinks = [
 
 
 
-export default function NavBar({ links }: { links: Array<Record<string, string>>}){
+export default function Home(){
   const { data: session } = useSession();
   const pathname = usePathname();
 
   const ImgStyle ={
     backgroundImage: 'url(/Elvis.jpg)',
-  
     backgroundSize: 'cover', 
     backgroundPosition: 'center',  
     borderRadius: '20px',
@@ -57,31 +58,10 @@ export default function NavBar({ links }: { links: Array<Record<string, string>>
 
   return(
     <div className="overflow-x-hidden">
-      <Image 
-        src="/logo.png"
-        alt="Smile studio logo"
-        width={200}
-        height={200}></Image>
-      <ul className="w-screen flex flex-wrap">
-        
-
-       
-      {navLinks.map(link => {
-      const isActive = pathname === link.href;
-      return (
-        <li key={`${link.name}-${link.href}`}>
-          <Link className={isActive ? 'text-ssblue p-4 text-lg' : 'text-ssblack p-4 text-lg hover:text-ssblue'} href={link.href}>
-            { link.name }
-          </Link>
-        </li>
-        )
-        })}
-      </ul>
-
-
+      <NavBar></NavBar>
       <div style={ImgStyle} className="h-96">
         <section className="text-left w-1/2 mr-auto mt-auto text-white font-helvetica">
-        <h3 className="text-xl font-bold">We Design Bespoke Smiles</h3>
+        <h3 className="text-4xl font-bold mb-8">We Design Bespoke Smiles</h3>
         <p>Our core treatments include Invisalign, braces, pediatric dentistry, smile design cases and teeth whitening and cleaning.</p>
         </section>
       </div>
@@ -106,11 +86,15 @@ export default function NavBar({ links }: { links: Array<Record<string, string>>
               <BreadcrumbItem>
               <Facebook></Facebook>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator>
+              <Slash />
+              </BreadcrumbSeparator>
               <BreadcrumbItem>
               <Instagram></Instagram>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator >
+              <Slash />
+              </BreadcrumbSeparator>
               <BreadcrumbItem>
                 <BreadcrumbPage className="font-bold">0711 279 035</BreadcrumbPage>
               </BreadcrumbItem>
@@ -119,7 +103,9 @@ export default function NavBar({ links }: { links: Array<Record<string, string>>
           </CardContent>
         </Card>
       </div>
+      <Footer></Footer>
     </div>
+
 
 
   )
