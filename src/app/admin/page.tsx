@@ -7,6 +7,15 @@ import Home from "../page"
 import { Label, Pie, PieChart } from "recharts"
 import Footer from "../footer/page"
 import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "~/components/ui/table"
+import {
   Card,
   CardContent,
   CardDescription,
@@ -85,11 +94,9 @@ export default function Admin() {
         return piechartData.reduce((acc, curr) => acc + curr.visitors, 0)
       }, [])
     return (
-    <div>
-         <NavBar></NavBar>
-    <div className="grid grid-auto-fit flex-wrap gap-4 m-10">
-       
-
+    <div className="">
+    <NavBar></NavBar>
+    <div className="grid grid-auto-fit flex-wrap gap-4 m-5">
         <Card>
         <CardHeader>
             <CardTitle>Bar Chart</CardTitle>
@@ -121,66 +128,65 @@ export default function Admin() {
         </CardFooter>
         </Card>
 
-        <Card className="justify-center">
-        <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
-        <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}/>
-            <Pie
-              data={piechartData}
-              dataKey="visitors"
-              nameKey="browser"
-              innerRadius={90}
-              strokeWidth={1}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle">
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold">
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground">
-                          Visitors
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="justify-center">
-            <div className="flex gap-2 font-medium leading-none">
-            Total amount of customers
+
+        <Card >
+            <CardHeader>
+            <CardTitle>Analytics</CardTitle>
+            <CardDescription>Started on 1/01/2025</CardDescription></CardHeader>
+        <CardContent className="grid grid-cols-2 gap-10">
+
+            <div className="justify-center">
+                <h3 className="text-3xl font-bold">1200</h3>
+                <p className="">Customers</p>
             </div>
-      </CardFooter>
-    </Card>
+
+            <div>
+                <h3 className="text-3xl font-bold">June</h3>
+                <p className="">Best month</p>
+            </div>
+
+            <div>
+                <h3 className="text-3xl font-bold">200 000</h3>
+                <p className="">Profit</p>
+            </div>
+
+            <div>
+                <h3 className="text-3xl font-bold">June</h3>
+                <p className="">Best month</p>
+            </div>
+
+
+        </CardContent>
+      
+        </Card>
      
 
-        <Card className="justify-center ">
-            <Button className="m-8">Button 1</Button>
-            <Button className="m-8">Button 2</Button>
-            <Button className="m-8">Button 2</Button>
-            <Button className="m-8">Button 2</Button>
-        
+        <Card>
+            <CardHeader>
+                <CardTitle></CardTitle>
+                <CardDescription></CardDescription>
+            </CardHeader>
+            <CardContent>
+            <Table>
+            <TableCaption>Recent appointments.</TableCaption>
+            <TableHeader>
+                <TableRow>
+                <TableHead className="w-[100px]">1</TableHead>
+                <TableHead>2</TableHead>
+                <TableHead>3</TableHead>
+                <TableHead className="text-right">4</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                <TableRow>
+                <TableCell className="font-medium">...</TableCell>
+                <TableCell>...</TableCell>
+                <TableCell>...</TableCell>
+                <TableCell className="text-right">...</TableCell>
+                </TableRow>
+            </TableBody>
+            </Table>
+            </CardContent>
         </Card>
     </div>
     <Footer></Footer>

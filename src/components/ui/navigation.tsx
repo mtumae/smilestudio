@@ -5,7 +5,7 @@ import Link from "next/link";
 const navLinks = [
     {name:"Home", href:"/"},
     {name:"Admin", href:"/admin"},
-    {name:"Blog", href:"/blog"},
+    {name:"News", href:"/news"},
     {name:"Login", href:"/api/auth/signup"},
   ]
   
@@ -13,7 +13,7 @@ const navLinks = [
 export default function NavBar(){
     const pathname = usePathname();
     return(
-        <div className="overflow-x-hidden">
+        <div className="overflow-hidden">
       <Image 
         src="/logo.png"
         alt="Smile studio logo"
