@@ -13,21 +13,17 @@ import {
 
 
 
-export default function Blog(){
+export default function News(){
     return(
         <div>
-            <Home></Home>
         <div className="grid grid-auto-fit justify-center items-center gap-4 m-10">
 
             <div className="grid1-item items-center">
-                <Card className="">
-                    <CardHeader>Blog</CardHeader>
-                </Card>
+               
             </div>
 
-
-
         </div>
+        <Footer></Footer>
         </div>
     )
 }

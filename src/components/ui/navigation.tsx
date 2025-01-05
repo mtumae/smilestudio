@@ -9,7 +9,7 @@ import { LogOut, Settings, User2 } from "lucide-react";
 const navLinks = [
     {name:"Home", href:"/"},
     {name:"Admin", href:"/admin"},
-    {name:"Blog", href:"/blog"},
+    {name:"News", href:"/news"},
     {name:"Login", href:"/api/auth/signup"},
   ]
   
