@@ -10,6 +10,7 @@ const navLinks = [
     {name:"Home", href:"/"},
     {name:"Admin", href:"/admin"},
     {name:"News", href:"/news"},
+    {name:"Book", href:"/book"},
     {name:"Login", href:"/api/auth/signup"},
   ]
   
@@ -23,7 +24,7 @@ const navLinks = [
     );
  
     return (
-        <div className="overflow-x-hidden">
+        <div className="overflow-hidden">
             <div className="relative">
                 <div className="flex justify-between items-center">
                     <Image

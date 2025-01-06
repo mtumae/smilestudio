@@ -1,7 +1,8 @@
 "use client"
 import Image from "next/image";
 import { Slash, SlashIcon } from "lucide-react";
-import { Facebook, Instagram, MoveUpRight } from "lucide-react";
+import { Facebook, Instagram, MoveUpRight, MoveRight} from "lucide-react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,7 +28,7 @@ import { Calendar, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { SocialIcon } from 'react-social-icons'
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "~/components/ui/card";
 import Footer from "./footer/page";
 import NavBar from "~/components/ui/navigation";
 
@@ -58,15 +59,11 @@ export default function Home(){
 
 
   const Img2Style={
-    backgroundImage: 'url(/chair.jpg)',
-    backgroundSize: 'cover', 
-    backgroundPosition: 'center',  
-    borderRadius: '20px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'left',
-   
+    backgroundImage: 'url(/chairblur.jpeg)', 
+  }
 
+  const Img3Style={
+    backgroundImage: 'url(/chair2blur.jpg)', 
   }
 
   return(
@@ -81,17 +78,17 @@ export default function Home(){
 
 
 
-      <div className="grid grid-auto-fit m-10 gap-4">
-        <Card className="justify-items-center border-none">
-        <Calendar className="m-10" />
+      <div className="grid grid-auto-fit m-20">
+        <Card className="justify-items-center border-none shadow-none">
+        <Calendar className="mt-10 " />
           <CardHeader className="text-xl font-bold font-helvetica">Book an appointment with us</CardHeader>
           <CardContent>
             <Button className="bg-ssblue">Book now</Button>
           </CardContent>
         </Card>
 
-        <Card className="justify-items-center border-none">
-        <Phone className="m-10" />
+        <Card className="justify-items-center border-none shadow-none">
+        <Phone className="mt-10" />
           <CardHeader className="text-xl font-bold">Contact us via phone or social media</CardHeader>
           <CardContent>
           <Breadcrumb>
@@ -118,18 +115,38 @@ export default function Home(){
         </div>
       
 
-        <div className="grid grid-auto-fit m-10 gap-4">
-        <Card className="justify-items-center border-none">
-          
+        <div className="grid grid-auto-fit m-10 gap-2">
+              <Card style={Img2Style} className=" p-5">
+                <CardHeader>
+                <CardTitle className="text-xl font-bold text-white">Implants: A Brief History</CardTitle>
+                <CardDescription className="text-white">Smile Studio Kenya</CardDescription>
+                </CardHeader>
+                <CardContent className=" text-white">
+                Most patients may not automatically associate the word “implants” with oral health. 
+                Most patients may also not know much about the history of dental implants, 
+                and the role they have played and continue to play in restorative dental health.
+                With over 95% success rates, dental implants are an excellent tooth replacement solution.
+                </CardContent>
+                <CardFooter className="text-ssblue hover:text-white cursor-pointer">
+                  read more <MoveRight className="ml-4 mt-1"/>
+                </CardFooter>
+              </Card> 
 
-        </Card>
-
-        <Card>
-
-        </Card>
+              <Card style={Img3Style} className="p-5">
+                <CardHeader>
+                <CardTitle className="text-xl font-bold text-white">Why you should find out if you might have gum disease?</CardTitle  >
+                </CardHeader>
+                <CardContent className=" text-white">
+                Gum disease is when your gums become swollen, sore or infected. 
+                Gum disease may not cause pain as it gets worse, 
+                so many don’t often notice that they have it until it’s too late. 
+                What are the signs of gum disease?
+                </CardContent>
+                <CardFooter className="text-ssblue hover:text-white cursor-pointer">
+                  read more <MoveRight className="ml-4 mt-1"/>
+                </CardFooter>
+              </Card>          
         </div>
-
-      
       <Footer></Footer>
     </div>
 
