@@ -1,10 +1,10 @@
 
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure,publicProcedure } from "~/server/api/trpc";
 import { appointments, accounts } from "~/server/db/schema";
 import { GoogleCalendarService } from "~/lib/calender";
-import { eq, and } from "drizzle-orm";
+import { eq, and, gte, lte } from "drizzle-orm";
 
 const createAppointmentSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -92,6 +92,25 @@ export const appointmentRouter = createTRPCRouter({
         });
       }
     }),
+
+getAvailableSlots: publicProcedure
+.input(z.object({
+  date: z.string()
+}))
+.query(async ({ ctx, input }) => {
+  const dayStart = new Date(input.date);
+  const dayEnd = new Date(input.date);
+  dayEnd.setHours(23, 59, 59);
+
+  const existingAppointments = await ctx.db.query.appointments.findMany({
+    where: and(
+      gte(appointments.startTime, dayStart),
+      lte(appointments.endTime, dayEnd)
+    ),
+  });
+
+  return existingAppointments;
+}),
 
   deleteAppointment: protectedProcedure
     .input(z.object({
