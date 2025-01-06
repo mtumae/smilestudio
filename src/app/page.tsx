@@ -44,7 +44,7 @@ export default function Home(){
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  const ImgStyle ={
+  const Img1Style ={
     backgroundImage: 'url(/Elvis.jpg)',
     backgroundSize: 'cover', 
     backgroundPosition: 'center',  
@@ -56,10 +56,23 @@ export default function Home(){
     margin: '20px',
   };
 
+
+  const Img2Style={
+    backgroundImage: 'url(/chair.jpg)',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    borderRadius: '20px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'left',
+   
+
+  }
+
   return(
     <div className="overflow-x-hidden">
       <NavBar></NavBar>
-      <div style={ImgStyle} className="h-96">
+      <div style={Img1Style} className="h-96">
         <section className="text-left w-1/2 mr-auto mt-auto text-white font-helvetica">
         <h3 className="text-4xl font-bold mb-8">We Design Bespoke Smiles</h3>
         <p>Our core treatments include Invisalign, braces, pediatric dentistry, smile design cases and teeth whitening and cleaning.</p>
@@ -102,7 +115,21 @@ export default function Home(){
           </Breadcrumb>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      
+
+        <div className="grid grid-auto-fit m-10 gap-4">
+        <Card className="justify-items-center border-none">
+          
+
+        </Card>
+
+        <Card>
+
+        </Card>
+        </div>
+
+      
       <Footer></Footer>
     </div>
 
