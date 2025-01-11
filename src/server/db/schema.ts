@@ -162,6 +162,16 @@ export const patients = createTable('patients', {
   .notNull(),
   
 });
+export const messages = createTable('messages', {
+  id: serial('id').primaryKey(),
+  customerId: varchar('customer_id', { length: 255 }).notNull(),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('unread'),
+  respondedBy: varchar('responded_by', { length: 255 }).references(() => users.id),
+  responseContent: text('response_content'),
+  responseTime: timestamp('response_time'),
+});
 
 export const verificationTokens = createTable(
   "verification_token",

@@ -28,6 +28,7 @@ import { ActivityIcon, Calendar1, CalendarIcon, DollarSignIcon, Users2, UsersIco
 import { toast } from '~/hooks/use-toast';
 import AddAdminDialog from './AddAdmin';
 import { set } from 'date-fns';
+import AdminMessagesPage from './Messages';
 
 
 const mockAppointments = [
@@ -953,10 +954,7 @@ const DentalDashboard = () => {
 
       <Card>
         <CardContent className="p-6">
-          {/* Add message list/chat interface */}
-          <div className="text-center text-text-secondary py-12">
-            Message interface coming soon
-          </div>
+       <AdminMessagesPage/>
         </CardContent>
       </Card>
     </div>
