@@ -1,15 +1,15 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState} from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Progress } from "~/components/ui/progress";
+
 import { Badge } from "~/components/ui/badge";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Input } from "~/components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+
 import { Calendar } from "~/components/ui/calendar";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
@@ -18,7 +18,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { FiSettings, FiBell, FiUser, FiLogOut, FiCalendar, FiDollarSign, FiUsers, FiActivity, FiPieChart, FiEdit, FiEye, FiCheckCircle, FiDownload, FiMenu, FiGrid, FiClock, FiTrendingUp, FiAlertCircle, FiSearch, FiFilter, FiPlus, FiMail, FiPhone, FiMessageSquare } from "react-icons/fi";
 import Image from 'next/image';
-
+import { api } from '~/trpc/react';
+import { ActivityIcon, Calendar1, CalendarIcon, DollarSignIcon, Users2, UsersIcon } from 'lucide-react';
 // Mock Data
 const mockAppointments = [
   {
@@ -186,6 +187,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { icon: FiMessageSquare, label: 'Messages', path: '/messages', badge: '5' },
     { icon: FiSettings, label: 'Settings', path: '/settings', badge: null },
   ];
+  const userQuery =  api.user.getMe.useQuery();
 
   return (
     <motion.div 
@@ -196,10 +198,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <div className="p-6">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">
-            <Image src="/dental-logo.svg" alt="Dental Dashboard" width={40} height={40} />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-primary-light to-primary-dark bg-clip-text text-transparent">
-              DentalCare Pro
-            </h1>
+            <Image src="/logo.png" alt="Dental Dashboard" width={140} height={50} />
+           
           </div>
           <Button 
             variant="ghost" 
@@ -221,7 +221,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               <item.icon className="mr-3 h-5 w-5" />
               <span>{item.label}</span>
               {item.badge && (
-                <Badge variant="default" className="absolute right-2">
+                <Badge variant="destructive" className="absolute right-2">
                   {item.badge}
                 </Badge>
               )}
@@ -236,12 +236,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <Avatar>
-                  <AvatarImage src="/doctor-avatar.jpg" alt="Dr. Sarah Wilson" />
-                  <AvatarFallback>SW</AvatarFallback>
+                  <AvatarImage src={userQuery.data?.image??"https://github.com/shadcn.png"} alt="User" />
+                  <AvatarFallback>{userQuery.data?.email?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium">Dr. Sarah Wilson</p>
-                  <p className="text-xs text-text-secondary">Lead Dentist</p>
+                  <p className="text-sm font-medium">{userQuery.data?.name}</p>
+                  <p className="text-xs text-text-secondary">{userQuery.data?.role}</p>
                 </div>
               </div>
             </CardContent>
@@ -253,9 +253,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 };
 
 // Header Component
-const Header = ({ toggleSidebar, notifications }) => {
+const Header = ({ toggleSidebar, notifications,user }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const unreadCount = notifications.filter(n => !n.read).length;
+  const userQuery =  api.user.getMe.useQuery();
+  console.log(userQuery.data);
 
   return (
     <header className="sticky top-0 z-40 bg-background-secondary border-b border-border-default">
@@ -270,22 +272,20 @@ const Header = ({ toggleSidebar, notifications }) => {
             >
               <FiMenu className="h-5 w-5" />
             </Button>
-            <div className="relative">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-tertiary" />
-              <Input 
-                placeholder="Search patients, appointments..." 
-                className="pl-10 w-[300px] bg-background-tertiary border-none"
-              />
-            </div>
+         
           </div>
 
           <div className="flex items-center space-x-4">
+            <Button >
+              <FiPlus className="mr-2 h-4 w-4" />
+              New Appointment
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
                   <FiBell className="h-5 w-5" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary-default text-xs flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red text-xs text-white flex items-center justify-center">
                       {unreadCount}
                     </span>
                   )}
@@ -321,16 +321,16 @@ const Header = ({ toggleSidebar, notifications }) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <Avatar>
-                    <AvatarImage src="/doctor-avatar.jpg" alt="Dr. Sarah Wilson" />
-                    <AvatarFallback>SW</AvatarFallback>
+                    <AvatarImage src={userQuery.data?.image ?? "https://github.com/shadcn.png"} alt="User" />
+                    <AvatarFallback>{userQuery.data?.name??"User".charAt(0)}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">Dr. Sarah Wilson</p>
-                    <p className="text-xs text-text-tertiary">sarah.wilson@dentalcare.com</p>
+                    <p className="text-sm font-medium">{userQuery.data?.name ?? "Admin"}</p>
+                    <p className="text-xs text-text-tertiary">{userQuery.data?.email}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -356,30 +356,69 @@ const Header = ({ toggleSidebar, notifications }) => {
   );
 };
 // Stats Card Component
-const StatsCard = ({ title, value, trend, icon: Icon, color }) => {
+// In DentalDashboard.tsx
+const StatsCard = ({ title, value, trend, type, color }) => {
+  const iconMap = {
+    appointments: CalendarIcon,
+    patients: UsersIcon,
+    revenue: DollarSignIcon,
+    satisfaction: ActivityIcon
+  };
+  const IconComponent = iconMap[type];
+
   return (
     <motion.div 
       whileHover={{ scale: 1.02 }}
       className="rounded-xl"
     >
-      <Card className="bg-background-card border-none hover:bg-background-tertiary transition-all duration-200">
+      <Card className="bg-gradient-to-br from-background-card to-background-card/90 border border-border-subtle/10 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 min-h-[180px] w-full">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-text-secondary mb-1">{title}</p>
-              <h3 className="text-2xl font-bold text-text-primary">{value}</h3>
-              {trend && (
-                <div className="flex items-center mt-2">
-                  <FiTrendingUp className={`mr-1 ${trend.includes('+') ? 'text-success-default' : 'text-error-default'}`} />
-                  <span className={`text-sm ${trend.includes('+') ? 'text-success-default' : 'text-error-default'}`}>
-                    {trend}
-                  </span>
+          <div className="flex flex-col h-full justify-between">
+            <div className="flex items-start justify-between">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-text-secondary/80 tracking-wide uppercase">
+                  {title}
+                </p>
+                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-text-primary to-text-primary/90">
+                  {value}
+                </h3>
+              </div>
+              <div className={`
+                p-3 rounded-xl bg-opacity-15 backdrop-blur-sm
+                ${color} ring-1 ring-${color}/20
+                transform hover:scale-105 transition-transform duration-200
+              `}>
+                 {IconComponent && (
+                <div className={`
+                  p-3 rounded-xl bg-opacity-15 backdrop-blur-sm
+                  ${color} ring-1 ring-${color}/20
+                  transform hover:scale-105 transition-transform duration-200
+                `}>
+                  <IconComponent className={`h-6 w-6 ${color} opacity-90`} />
                 </div>
               )}
+              </div>
             </div>
-            <div className={`p-3 rounded-full bg-opacity-20 ${color}`}>
-              <Icon className={`h-6 w-6 ${color}`} />
-            </div>
+            
+            {trend && (
+              <div className="flex items-center mt-4 space-x-2">
+                <FiTrendingUp 
+                  className={`${
+                    trend.includes('+') 
+                      ? 'text-success-default/90' 
+                      : 'text-error-default/90'
+                  } h-4 w-4`}
+                />
+                <span className={`
+                  text-sm font-semibold
+                  ${trend.includes('+') 
+                    ? 'text-success-default/90' 
+                    : 'text-error-default/90'}
+                `}>
+                  {trend}
+                </span>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -590,37 +629,47 @@ const RecentAppointments = ({ appointments }) => {
 // Main Dashboard Component
 const DentalDashboard = () => {
   const [isOpen, setIsOpen] = useState(true);
+ 
 
-  const statsData = [
-    {
-      title: "Today's Appointments",
-      value: "12",
-      trend: "+20% vs. last week",
-      icon: FiCalendar,
-      color: "text-primary-default"
-    },
-    {
-      title: "Total Patients",
-      value: "1,234",
-      trend: "+5% vs. last month",
-      icon: FiUsers,
-      color: "text-success-default"
-    },
-    {
-      title: "Monthly Revenue",
-      value: "$52,000",
-      trend: "+15% vs. last month",
-      icon: FiDollarSign,
-      color: "text-warning-default"
-    },
-    {
-      title: "Satisfaction Rate",
-      value: "98%",
-      trend: "+2% vs. last month",
-      icon: FiActivity,
-      color: "text-error-default"
-    }
-  ];
+  // const statsData = [
+  //   {
+  //     title: "Today's Appointments",
+  //     value: "12",
+  //     trend: "+20% vs. last week",
+  //     icon: FiCalendar,
+  //     color: "text-primary-default"
+  //   },
+  //   {
+  //     title: "Total Patients",
+  //     value: "1,234",
+  //     trend: "+5% vs. last month",
+  //     icon: FiUsers,
+  //     color: "text-success-default"
+  //   },
+  //   {
+  //     title: "Monthly Revenue",
+  //     value: "$52,000",
+  //     trend: "+15% vs. last month",
+  //     icon: FiDollarSign,
+  //     color: "text-warning-default"
+  //   },
+  //   {
+  //     title: "Satisfaction Rate",
+  //     value: "98%",
+  //     trend: "+2% vs. last month",
+  //     icon: FiActivity,
+  //     color: "text-error-default"
+  //   }
+  // ];
+  const userQuery =  api.user.getMe.useQuery();
+  const statsQuery =  api.admin.getStats.useQuery();
+  const statsData = statsQuery.data;
+  const iconMap = {
+    appointments: CalendarIcon,
+    patients: UsersIcon,
+    revenue: DollarSignIcon,
+    satisfaction: ActivityIcon
+  };
 
   return (
     <div className="min-h-screen bg-background-primary text-text-primary">
@@ -630,15 +679,23 @@ const DentalDashboard = () => {
         <Header 
           toggleSidebar={() => setIsOpen(!isOpen)} 
           notifications={mockNotifications}
+          user={userQuery.data}
         />
 
         <main className="p-6">
           <div className="max-w-7xl mx-auto space-y-6">
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {statsData.map((stat, index) => (
-                <StatsCard key={index} {...stat} />
-              ))}
+            {statsData?.map((stat) => {
+       
+          return (
+            <StatsCard 
+              key={stat.title}
+              {...stat}
+              type={stat.type}
+            />
+          )
+        })}
             </div>
 
             {/* Charts */}

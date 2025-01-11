@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  decimal,
   index,
   integer,
   pgTableCreator,
@@ -48,6 +49,7 @@ export const users = createTable("user", {
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
   phonenumber: varchar("phonenumber", { length: 255 }).unique(),
+  role: varchar("role", { length: 255 }).notNull().default("client"),
   password: text("password"),
   emailVerified: timestamp("email_verified", {
     mode: "date",
@@ -134,7 +136,24 @@ export const appointmentTypes = createTable('appointment_types', {
   name: varchar('name', { length: 255 }).notNull(),
   duration: integer('duration').notNull(), 
 });
+export const revenues = createTable('revenues', {
+  id: serial('id').primaryKey(),
+  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  date: timestamp('date').notNull(),
+});
 
+export const satisfactionRatings = createTable('satisfaction_ratings', {
+  id: serial('id').primaryKey(),
+  rating: integer('rating').notNull(),
+  date: timestamp('date').notNull(),
+});
+export const patients = createTable('patients', {
+  id: serial('id').primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+  .default(sql`CURRENT_TIMESTAMP`)
+  .notNull(),
+  
+});
 export const verificationTokens = createTable(
   "verification_token",
   {

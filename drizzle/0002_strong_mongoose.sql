@@ -1,0 +1,1 @@
+ALTER TABLE "smilestudio_user" ADD COLUMN "role" varchar(255) DEFAULT 'client' NOT NULL;

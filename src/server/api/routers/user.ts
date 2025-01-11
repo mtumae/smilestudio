@@ -4,11 +4,20 @@ import * as bcryptjs from "bcryptjs";
 
 import {
   createTRPCRouter,
+  protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 import { users } from "~/server/db/schema";
+import { db } from "~/server/db";
 
 export const userRouter = createTRPCRouter({
+    getMe: publicProcedure
+    .query(async ({ ctx }) => {
+       return   await ctx.db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.id, ctx.session?.user.id ?? ""),
+      });
+
+    }),
     signUp: publicProcedure
     .input(z.object({
       email: z.string().email(),
