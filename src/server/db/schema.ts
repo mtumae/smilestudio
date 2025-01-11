@@ -1,4 +1,5 @@
 import { relations, sql } from "drizzle-orm";
+
 import {
   decimal,
   index,
@@ -9,7 +10,9 @@ import {
   text,
   timestamp,
   varchar,
+  boolean
 } from "drizzle-orm/pg-core";
+
 import { type AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -147,6 +150,11 @@ export const satisfactionRatings = createTable('satisfaction_ratings', {
   rating: integer('rating').notNull(),
   date: timestamp('date').notNull(),
 });
+export const settings = createTable('settings', {
+  id: serial('id').primaryKey(),
+  key: varchar('key', { length: 255 }).notNull(),
+  isSet: boolean('isSet').default(true),
+});
 export const patients = createTable('patients', {
   id: serial('id').primaryKey(),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -154,6 +162,7 @@ export const patients = createTable('patients', {
   .notNull(),
   
 });
+
 export const verificationTokens = createTable(
   "verification_token",
   {
