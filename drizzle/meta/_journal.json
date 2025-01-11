@@ -15,6 +15,20 @@
       "when": 1735915040346,
       "tag": "0001_acoustic_wrecker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736590943125,
+      "tag": "0002_strong_mongoose",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1736594234619,
+      "tag": "0003_faithful_prism",
+      "breakpoints": true
     }
   ]
 }
