@@ -6,6 +6,7 @@ import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Session } from "inspector/promises";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "~/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -20,7 +21,8 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <SessionProvider>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>{children} <Toaster/></TRPCReactProvider>
+        
         </SessionProvider>  
       </body>
     </html>

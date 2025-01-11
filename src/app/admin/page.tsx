@@ -5,6 +5,11 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
 
 import { Badge } from "~/components/ui/badge";
 import { ScrollArea } from "~/components/ui/scroll-area";
@@ -16,11 +21,15 @@ import { Switch } from "~/components/ui/switch";
 import { Separator } from "~/components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 import { LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { FiSettings, FiBell, FiUser, FiLogOut, FiCalendar, FiDollarSign, FiUsers, FiActivity, FiPieChart, FiEdit, FiEye, FiCheckCircle, FiDownload, FiMenu, FiGrid, FiClock, FiTrendingUp, FiAlertCircle, FiSearch, FiFilter, FiPlus, FiMail, FiPhone, FiMessageSquare } from "react-icons/fi";
+import { FiSettings, FiBell, FiUser, FiLogOut, FiCalendar, FiDollarSign, FiUsers, FiActivity, FiPieChart, FiEdit, FiEye, FiCheckCircle, FiDownload, FiMenu, FiGrid, FiClock, FiTrendingUp, FiAlertCircle, FiSearch, FiFilter, FiPlus, FiMail, FiPhone, FiMessageSquare, FiTrash, FiTrash2 } from "react-icons/fi";
 import Image from 'next/image';
 import { api } from '~/trpc/react';
 import { ActivityIcon, Calendar1, CalendarIcon, DollarSignIcon, Users2, UsersIcon } from 'lucide-react';
-// Mock Data
+import { toast } from '~/hooks/use-toast';
+import AddAdminDialog from './AddAdmin';
+import { set } from 'date-fns';
+
+
 const mockAppointments = [
   {
     id: 1,
@@ -98,6 +107,12 @@ const mockAnalytics = {
     { name: 'Extraction', count: 60, revenue: 36000 },
   ]
 };
+interface SidebarProps {
+  isOpen: boolean;
+  toggleSidebar: () => void;
+  activeView: string;
+  setActiveView: (view: string) => void;
+}
 
 const mockNotifications = [
   {
@@ -177,72 +192,198 @@ const theme = {
 // Component Definitions
 
 // Sidebar Navigation Component
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar, activeView, setActiveView }) => {
   const navItems = [
-    { icon: FiGrid, label: 'Dashboard', path: '/', badge: null },
-    { icon: FiCalendar, label: 'Appointments', path: '/appointments', badge: '3' },
-    { icon: FiUsers, label: 'Patients', path: '/patients', badge: null },
-    { icon: FiDollarSign, label: 'Billing', path: '/billing', badge: '2' },
-    { icon: FiPieChart, label: 'Analytics', path: '/analytics', badge: null },
-    { icon: FiMessageSquare, label: 'Messages', path: '/messages', badge: '5' },
-    { icon: FiSettings, label: 'Settings', path: '/settings', badge: null },
+    { 
+      icon: FiGrid, 
+      label: 'Dashboard', 
+      path: 'dashboard', 
+      badge: null,
+      section: 'main'
+    },
+    { 
+      icon: FiCalendar, 
+      label: 'Appointments', 
+      path: 'appointments', 
+      badge: '3',
+      section: 'main'
+    },
+    { 
+      icon: FiUsers, 
+      label: 'Patients', 
+      path: 'patients', 
+      badge: null,
+      section: 'main'
+    },
+    { 
+      icon: FiDollarSign, 
+      label: 'Billing', 
+      path: 'billing', 
+      badge: '2',
+      section: 'main'
+    },
+    { 
+      icon: FiPieChart, 
+      label: 'Analytics', 
+      path: 'analytics', 
+      badge: null,
+      section: 'main'
+    },
+    { 
+      icon: FiMessageSquare, 
+      label: 'Messages', 
+      path: 'messages', 
+      badge: '5',
+      section: 'communication'
+    },
+    { 
+      icon: FiMail, 
+      label: 'Email', 
+      path: 'email', 
+      badge: null,
+      section: 'communication'
+    },
+    { 
+      icon: FiSettings, 
+      label: 'Settings', 
+      path: 'settings', 
+      badge: null,
+      section: 'system'
+    },
+    { 
+      icon: FiUser, 
+      label: 'Profile', 
+      path: 'profile', 
+      badge: null,
+      section: 'system'
+    }
   ];
-  const userQuery =  api.user.getMe.useQuery();
+
+  const userQuery = api.user.getMe.useQuery();
+
+  // Group nav items by section
+  const groupedNavItems = navItems.reduce((acc, item) => {
+    if (!acc[item.section]) {
+      acc[item.section] = [];
+    }
+    acc[item.section].push(item);
+    return acc;
+  }, {});
 
   return (
     <motion.div 
       initial={{ x: -300 }}
       animate={{ x: isOpen ? 0 : -300 }}
-      className="fixed left-0 top-0 h-full w-64 bg-background-secondary border-r border-border-default z-50"
+      className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-50"
     >
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-3">
-            <Image src="/logo.png" alt="Dental Dashboard" width={140} height={50} />
-           
-          </div>
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={toggleSidebar}
-            className="lg:hidden"
-          >
-            <FiMenu className="h-5 w-5" />
-          </Button>
-        </div>
-        
-        <nav className="space-y-1">
-          {navItems.map((item, index) => (
-            <Button
-              key={index}
-              variant="ghost"
-              className="w-full justify-start text-left hover:bg-background-tertiary group relative"
+      <div className="flex flex-col h-full">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-3">
+              <Image 
+                src="/logo.png" 
+                alt="Dental Dashboard" 
+                width={140} 
+                height={50}
+              />
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={toggleSidebar}
+              className="lg:hidden"
             >
-              <item.icon className="mr-3 h-5 w-5" />
-              <span>{item.label}</span>
-              {item.badge && (
-                <Badge variant="destructive" className="absolute right-2">
-                  {item.badge}
-                </Badge>
-              )}
+              <FiMenu className="h-5 w-5" />
             </Button>
-          ))}
-        </nav>
+          </div>
+          
+          <nav className="space-y-6">
+            {Object.entries(groupedNavItems).map(([section, items]) => (
+              <div key={section} className="space-y-1">
+                <p className="px-2 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </p>
+                {items.map((item, index) => (
+                  <Button
+                    key={index}
+                    variant={activeView === item.path ? "default" : "ghost"}
+                    className={`w-full justify-start text-left hover:bg-gray-50 group relative
+                      ${activeView === item.path ? 'bg-ssblue hover:bg-ssblue/90' : ''}
+                    `}
+                    onClick={() => setActiveView(item.path)}
+                  >
+                    <item.icon className={`mr-3 h-5 w-5 
+                      ${activeView === item.path ? 'text-white' : 'text-gray-600 group-hover:text-gray-900'}
+                    `} />
+                    <span className={`
+                      ${activeView === item.path ? 'text-white' : 'text-gray-700 group-hover:text-gray-900'}
+                    `}>
+                      {item.label}
+                    </span>
+                    {item.badge && (
+                      <Badge 
+                        variant={activeView === item.path ? "outline" : "default"} 
+                        className={`absolute right-2 ${
+                          activeView === item.path 
+                            ? 'bg-white text-ssblue' 
+                            : 'bg-ssblue text-white'
+                        }`}
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </Button>
+                ))}
+              </div>
+            ))}
+          </nav>
+        </div>
 
-        <Separator className="my-6" />
-
-        <div className="pt-4">
-          <Card className="bg-background-tertiary border-none">
+        <div className="mt-auto p-6">
+          <Separator className="mb-6" />
+          
+          <Card className="bg-gray-50 border-none shadow-sm">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <Avatar>
-                  <AvatarImage src={userQuery.data?.image??"https://github.com/shadcn.png"} alt="User" />
-                  <AvatarFallback>{userQuery.data?.email?.charAt(0)}</AvatarFallback>
+                  <AvatarImage 
+                    src={userQuery.data?.image ?? "https://github.com/shadcn.png"} 
+                    alt="User" 
+                  />
+                  <AvatarFallback>
+                    {userQuery.data?.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
-                <div>
-                  <p className="text-sm font-medium">{userQuery.data?.name}</p>
-                  <p className="text-xs text-text-secondary">{userQuery.data?.role}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {userQuery.data?.name ?? "User"}
+                  </p>
+                  <p className="text-xs text-gray-600 truncate">
+                    {userQuery.data?.email}
+                  </p>
                 </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <FiSettings className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem>
+                      <FiUser className="mr-2 h-4 w-4" />
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <FiSettings className="mr-2 h-4 w-4" />
+                      Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-red-600">
+                      <FiLogOut className="mr-2 h-4 w-4" />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </CardContent>
           </Card>
@@ -629,51 +770,404 @@ const RecentAppointments = ({ appointments }) => {
 // Main Dashboard Component
 const DentalDashboard = () => {
   const [isOpen, setIsOpen] = useState(true);
- 
-
-  // const statsData = [
-  //   {
-  //     title: "Today's Appointments",
-  //     value: "12",
-  //     trend: "+20% vs. last week",
-  //     icon: FiCalendar,
-  //     color: "text-primary-default"
-  //   },
-  //   {
-  //     title: "Total Patients",
-  //     value: "1,234",
-  //     trend: "+5% vs. last month",
-  //     icon: FiUsers,
-  //     color: "text-success-default"
-  //   },
-  //   {
-  //     title: "Monthly Revenue",
-  //     value: "$52,000",
-  //     trend: "+15% vs. last month",
-  //     icon: FiDollarSign,
-  //     color: "text-warning-default"
-  //   },
-  //   {
-  //     title: "Satisfaction Rate",
-  //     value: "98%",
-  //     trend: "+2% vs. last month",
-  //     icon: FiActivity,
-  //     color: "text-error-default"
-  //   }
-  // ];
-  const userQuery =  api.user.getMe.useQuery();
-  const statsQuery =  api.admin.getStats.useQuery();
+  const [activeView, setActiveView] = useState('dashboard');
+  const userQuery = api.user.getMe.useQuery();
+  const statsQuery = api.admin.getStats.useQuery();
   const statsData = statsQuery.data;
-  const iconMap = {
-    appointments: CalendarIcon,
-    patients: UsersIcon,
-    revenue: DollarSignIcon,
-    satisfaction: ActivityIcon
+
+  // Dashboard View Component
+  const DashboardView = () => (
+    <div className="max-w-7xl mx-auto space-y-6">
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {statsData?.map((stat) => (
+          <StatsCard 
+            key={stat.title}
+            {...stat}
+            type={stat.type}
+          />
+        ))}
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AppointmentChart data={mockAnalytics.appointmentsByMonth} />
+        <RevenueChart data={mockAnalytics.revenueByMonth} />
+      </div>
+
+      {/* Additional Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <RecentAppointments appointments={mockAppointments} />
+        </div>
+        <div>
+          <ProcedureDistribution data={mockAnalytics.procedureTypes} />
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <Card className="bg-background-card border-none">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h3 className="font-semibold">Quick Actions</h3>
+              <p className="text-sm text-text-secondary">Common tasks and operations</p>
+            </div>
+            <div className="flex space-x-2">
+              <Button>
+                <FiPlus className="mr-2 h-4 w-4" />
+                New Appointment
+              </Button>
+              <Button variant="outline">
+                <FiUser className="mr-2 h-4 w-4" />
+                Add Patient
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Appointments View Component
+  const AppointmentsView = () => (
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Appointments</h1>
+          <p className="text-text-secondary">Manage your appointments and schedule</p>
+        </div>
+        <div className="flex space-x-2">
+          <Button>
+            <FiPlus className="mr-2 h-4 w-4" />
+            New Appointment
+          </Button>
+          <Button variant="outline">
+            <FiCalendar className="mr-2 h-4 w-4" />
+            Calendar View
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-2">
+              <h3 className="font-medium">Today's Schedule</h3>
+              <div className="text-3xl font-bold">12</div>
+              <p className="text-sm text-text-secondary">Appointments</p>
+            </div>
+          </CardContent>
+        </Card>
+        {/* Add more summary cards */}
+      </div>
+
+      <Card>
+        <CardContent className="p-6">
+          <RecentAppointments appointments={mockAppointments} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Patients View Component
+  const PatientsView = () => (
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Patients</h1>
+          <p className="text-text-secondary">Manage your patient records</p>
+        </div>
+        <Button>
+          <FiPlus className="mr-2 h-4 w-4" />
+          Add Patient
+        </Button>
+      </div>
+
+      <Card>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {mockPatients.map((patient) => (
+              <div key={patient.id} className="flex items-center justify-between p-4 border-b last:border-0">
+                <div className="flex items-center space-x-4">
+                  <Avatar>
+                    <AvatarFallback>{patient.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{patient.name}</p>
+                    <p className="text-sm text-text-secondary">{patient.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button variant="outline" size="sm">
+                    <FiEdit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <FiEye className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Analytics View Component
+  const AnalyticsView = () => (
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Analytics</h1>
+          <p className="text-text-secondary">Business insights and performance metrics</p>
+        </div>
+        <Button variant="outline">
+          <FiDownload className="mr-2 h-4 w-4" />
+          Export Report
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RevenueChart data={mockAnalytics.revenueByMonth} />
+        <AppointmentChart data={mockAnalytics.appointmentsByMonth} />
+        <ProcedureDistribution data={mockAnalytics.procedureTypes} />
+        {/* Add more analytics components */}
+      </div>
+    </div>
+  );
+
+  // Messages View Component
+  const MessagesView = () => (
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Messages</h1>
+          <p className="text-text-secondary">Patient communications and notifications</p>
+        </div>
+        <Button>
+          <FiMessageSquare className="mr-2 h-4 w-4" />
+          New Message
+        </Button>
+      </div>
+
+      <Card>
+        <CardContent className="p-6">
+          {/* Add message list/chat interface */}
+          <div className="text-center text-text-secondary py-12">
+            Message interface coming soon
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Settings View Component
+  const SettingsView = () => {
+   
+    const adminList = api.settings.fetchAdmins.useQuery();
+    
+   
+    const utils = api.useContext();
+    const { data: settings = [], isLoading } = api.settings.getSettings.useQuery();
+   
+    const toggleSettingMutation = api.settings.toggleSetting.useMutation({
+      onMutate: async ({ id, value }) => {
+        await utils.settings.getSettings.cancel();
+        
+        const previousSettings = utils.settings.getSettings.getData();
+   
+        utils.settings.getSettings.setData(undefined, old => {
+          if (!old) return previousSettings;
+          return old.map(setting => 
+            setting.id === id ? { ...setting, isSet: value } : setting
+          );
+        });
+        toast({
+          title: "Settings Updated",
+     
+        })
+   
+        return { previousSettings };
+      },
+   
+      onError: (err, variables, context) => {
+        if (context?.previousSettings) {
+          utils.settings.getSettings.setData(undefined, context.previousSettings);
+        }
+      },
+   
+      onSettled: () => {
+        utils.settings.getSettings.invalidate();
+      },
+    });
+   
+    const handleToggle = (id: number, currentValue: boolean) => {
+      toggleSettingMutation.mutate({
+        id,
+        value: !currentValue
+      });
+    };
+   
+    const settingsConfig = [
+      {
+        id: 1,
+        title: "Appointment Confirmation",
+        description: "Send confirmation requests before finalizing appointments"
+      },
+      {
+        id: 2, 
+        title: "Automatic Email Notifications",
+        description: "Send automated emails for appointments and reminders"
+      }
+    ];
+    const removeAdminMutation = api.settings.removeAdmin.useMutation({
+      onSuccess: () => {
+       
+       
+        toast({
+          title: "Success",
+          description: "Admin access has been removed successfully",
+          variant: "default",
+        });
+     
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
+   
+    return (
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          <p className="text-muted-foreground mt-2">
+            Configure your practice preferences and manage admin access
+          </p>
+        </div>
+   
+        <div className="grid gap-8">
+          {/* Practice Settings */}
+          <Card className="border-none shadow-lg hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-ssblue/5 to-ssblue/10 rounded-t-xl">
+              <CardTitle className="text-2xl font-semibold flex items-center gap-2">
+                <FiSettings className="h-6 w-6 text-ssblue" />
+                Practice Settings
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              {isLoading ? (
+                <div>Loading settings...</div>
+              ) : (
+                <>
+                  {settingsConfig.map(setting => (
+                    <div 
+                      key={setting.id}
+                      className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow transition-shadow duration-200"
+                    >
+                      <div className="space-y-1">
+                        <Label className="text-base font-medium">{setting.title}</Label>
+                        <p className="text-sm text-muted-foreground">
+                          {setting.description}
+                        </p>
+                      </div>
+                      <Switch 
+                        disabled={toggleSettingMutation.isLoading}
+                        checked={settings.find(s => s.id === setting.id)?.isSet ?? false}
+                        onCheckedChange={() => {
+                          const currentSetting = settings.find(s => s.id === setting.id);
+                          handleToggle(setting.id, currentSetting?.isSet ?? false);
+                        }}
+                      />
+                    </div>
+                  ))}
+                </>
+              )}
+            </CardContent>
+          </Card>
+   
+          {/* Admin Management */}
+          <Card className="border-none shadow-lg hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-ssblue/5 to-ssblue/10 rounded-t-xl flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FiUsers className="h-6 w-6 text-ssblue" />
+                <CardTitle className="text-2xl font-semibold">Admin Management</CardTitle>
+              </div>
+               <AddAdminDialog/>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {adminList.data?.map((admin) => (
+                  <div 
+                    key={admin.id}
+                    className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow transition-all duration-200"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <Avatar className="border-2 border-ssblue/20">
+                        <AvatarFallback className="bg-ssblue/10 text-ssblue">
+                          {admin.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-gray-900">{admin.name}</p>
+                        <p className="text-sm text-muted-foreground">{admin.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-ssblue/10 text-ssblue hover:bg-ssblue/20 transition-colors">
+                        {admin.role}
+                      </Badge>
+                    
+                      <Button 
+                        variant="destructive" 
+                        size="icon" 
+                        className="text-red-500 hover:text-red-700 hover:border-red-200"
+                        onClick={() => removeAdminMutation.mutate({email: admin.email})}
+                      >
+                        <FiTrash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+   };
+
+  const renderView = () => {
+    switch (activeView) {
+      case 'dashboard':
+        return <DashboardView />;
+      case 'appointments':
+        return <AppointmentsView />;
+      case 'patients':
+        return <PatientsView />;
+      case 'analytics':
+        return <AnalyticsView />;
+      case 'messages':
+        return <MessagesView />;
+      case 'settings':
+        return <SettingsView />;
+      default:
+        return <div>View not found</div>;
+    }
   };
 
   return (
     <div className="min-h-screen bg-background-primary text-text-primary">
-      <Sidebar isOpen={isOpen} toggleSidebar={() => setIsOpen(!isOpen)} />
+      <Sidebar 
+        isOpen={isOpen} 
+        toggleSidebar={() => setIsOpen(!isOpen)} 
+        activeView={activeView}
+        setActiveView={setActiveView}
+      />
       
       <div className={`transition-all duration-200 ${isOpen ? 'ml-64' : 'ml-0'}`}>
         <Header 
@@ -683,59 +1177,7 @@ const DentalDashboard = () => {
         />
 
         <main className="p-6">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {statsData?.map((stat) => {
-       
-          return (
-            <StatsCard 
-              key={stat.title}
-              {...stat}
-              type={stat.type}
-            />
-          )
-        })}
-            </div>
-
-            {/* Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <AppointmentChart data={mockAnalytics.appointmentsByMonth} />
-              <RevenueChart data={mockAnalytics.revenueByMonth} />
-            </div>
-
-            {/* Additional Insights */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <RecentAppointments appointments={mockAppointments} />
-              </div>
-              <div>
-                <ProcedureDistribution data={mockAnalytics.procedureTypes} />
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <Card className="bg-background-card border-none">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <h3 className="font-semibold">Quick Actions</h3>
-                    <p className="text-sm text-text-secondary">Common tasks and operations</p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button>
-                      <FiPlus className="mr-2 h-4 w-4" />
-                      New Appointment
-                    </Button>
-                    <Button variant="outline">
-                      <FiUser className="mr-2 h-4 w-4" />
-                      Add Patient
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          {renderView()}
         </main>
       </div>
     </div>
