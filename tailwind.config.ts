@@ -2,6 +2,7 @@ import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 
+
 export default {
     darkMode: ["class"],
     content: ["./src/**/*.tsx"],
@@ -10,7 +11,7 @@ export default {
   	extend: {
   		fontFamily: {
   			helvetica: ['Helvetica', 'Arial', 'sans-serif'],
-  
+			montserrat: ['Montserrat', 'Arial', 'sans-serif']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -86,6 +87,8 @@ export default {
   		ssblue: '#57fff0',
       ssblack: '#000000',
       ssgray: '#939696',
+	  othergray: '#e0e0e0',
+	  darkgray: '#696565',
       white: '#ffffff',
       red: '#eb2a2a'
   	}
