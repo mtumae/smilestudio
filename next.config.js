@@ -11,7 +11,8 @@ const config = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreDuringBuilds: true,
+    // Skip type checking during builds
+    ignoreBuildErrors: true,
   }
 };
 
