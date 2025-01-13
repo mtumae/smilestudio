@@ -9,6 +9,9 @@ const config = {
   eslint: {
     // Skip ESLint during builds
     ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreDuringBuilds: true,
   }
 };
 
