@@ -8,8 +8,9 @@ import { LogOut, Settings, User2 } from "lucide-react";
 
 const navLinks = [
     {name:"Home", href:"/"},
-    {name:"Admin", href:"/admin"},
+    //{name:"Admin", href:"/admin"},
     {name:"News", href:"/news"},
+    {name:"Services", href:"/services"},
     {name:"Book", href:"/book"},
     {name:"Login", href:"/api/auth/signup"},
   ]
@@ -25,13 +26,13 @@ const navLinks = [
  
     return (
         <div className="overflow-hidden">
-            <div className="relative">
+            <div className="relative self-end">
                 <div className="flex justify-between items-center">
                     <Image
                         src="/logo.png"
                         alt="Smile studio logo"
-                        width={200}
-                        height={200}
+                        width={300}
+                        height={300}
                     />
                     {session && (
                         <div className="absolute right-4 top-4">
@@ -62,13 +63,13 @@ const navLinks = [
                         </div>
                     )}
                 </div>
-                <ul className="w-screen flex flex-wrap">
+                <ul className="flex flex-wrap justify-self-center -mt-16">
                     {filteredNavLinks.map(link => {
                         const isActive = pathname === link.href;
                         return (
                             <li key={`${link.name}-${link.href}`}>
                                 <Link
-                                    className={isActive ? 'text-ssblue p-4 text-lg' : 'text-ssblack p-4 text-lg hover:text-ssblue'}
+                                    className={isActive ? 'text-ssblue p-4 text-sm font-montserrat' : 'text-darkgray p-4 text-sm font-montserrat hover:text-ssblue'}
                                     href={link.href}
                                 >
                                     {link.name}
