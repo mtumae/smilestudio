@@ -5,6 +5,7 @@ import { createTRPCRouter, protectedProcedure,publicProcedure } from "~/server/a
 import { appointments, accounts } from "~/server/db/schema";
 import { GoogleCalendarService } from "~/lib/calender";
 import { eq, and, gte, lte } from "drizzle-orm";
+import { EmailService } from "~/lib/email";  
 
 const createAppointmentSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -17,82 +18,101 @@ const createAppointmentSchema = z.object({
 });
 
 export const appointmentRouter = createTRPCRouter({
-  createAppointment: protectedProcedure
-    .input(createAppointmentSchema)
-    .mutation(async ({ ctx, input }) => {
-      try {
-        console.log('Starting appointment creation process...');
+  // Modified createAppointment procedure
+createAppointment: protectedProcedure
+.input(createAppointmentSchema)
+.mutation(async ({ ctx, input }) => {
+  try {
+    console.log('Starting appointment creation process...');
     
-        const account = await ctx.db.query.accounts.findFirst({
-          where: and(
-            eq(accounts.userId, ctx.session.user.id),
-            eq(accounts.provider, 'google')
-          ),
-        });
+    const account = await ctx.db.query.accounts.findFirst({
+      where: and(
+        eq(accounts.userId, ctx.session.user.id),
+        eq(accounts.provider, 'google')
+      ),
+    });
 
-        console.log('Google account found:', !!account);
+    console.log('Google account found:', !!account);
 
-        if (!account?.refresh_token) {
-          console.log('No refresh token found');
-          throw new TRPCError({
-            code: 'UNAUTHORIZED',
-            message: 'Google Calendar access not authorized. Please reconnect your Google account.'
-          });
-        }
+    let googleEventId: string | undefined;
 
-        const calendarService = new GoogleCalendarService(account.refresh_token);
-        
-        const startDateTime = new Date(input.startTime);
-        const endDateTime = new Date(input.endTime);
+    // Try Google Calendar if available
+    if (account?.refresh_token) {
+      const calendarService = new GoogleCalendarService(account.refresh_token);
+      const startDateTime = new Date(input.startTime);
+      const endDateTime = new Date(input.endTime);
+      
+      googleEventId = await calendarService.scheduleAppointment({
+        email: ctx.session.user.email!,
+        startTime: startDateTime,
+        endTime: endDateTime,
+        summary: `Dental Appointment - ${input.name}`,
+        description: `Appointment Type: ${input.type}\nPatient Email: ${input.email}`
+      });
 
-        console.log('Scheduling calendar event...');
-        
+      console.log('Calendar event created, ID:', googleEventId);
+    } else {
+      // Send confirmation email if Google Calendar is not available
+      console.log('No Google Calendar access, sending email confirmation instead');
+      const emailService = new EmailService();
+      
+      await emailService.sendConfirmationEmail(
+        input.email,
+        input.name,
+        input.type,
+        new Date(input.startTime),
+        new Date(input.date)
+      );
+
+      // Schedule a reminder email for one day before the appointment
+      const reminderDate = new Date(input.date);
+      reminderDate.setDate(reminderDate.getDate() - 1);
+      
+      // You might want to use a proper job scheduler here
+      setTimeout(async () => {
+        await emailService.sendReminderEmail(
+          input.email,
+          input.name,
+          input.type,
+          new Date(input.startTime),
+          new Date(input.date)
+        );
+      }, reminderDate.getTime() - Date.now());
+    }
+
+    console.log('Creating database record...');
     
-        const eventId = await calendarService.scheduleAppointment({
-          email: ctx.session.user.email!,
-          startTime: startDateTime,
-          endTime: endDateTime,
-          summary: `Dental Appointment - ${input.name}`,
-          description: `Appointment Type: ${input.type}\nPatient Email: ${input.email}`
-        });
+    const [newAppointment] = await ctx.db.insert(appointments).values({
+      patientName: input.name,
+      patientEmail: input.email,
+      appointmentType: input.type,
+      startTime: new Date(input.startTime),
+      endTime: new Date(input.endTime),
+      date: new Date(input.date),
+      googleEventId,
+    }).returning();
 
-        console.log('Calendar event created, ID:', eventId);
+    console.log('Database record created');
 
+    return {
+      success: true,
+      appointment: newAppointment,
+      calendarEventId: googleEventId
+    };
+  } catch (error) {
+    console.error("Detailed appointment creation error:", error);
     
-        console.log('Creating database record...');
-        
-        const [newAppointment] = await ctx.db.insert(appointments).values({
-          patientName: input.name,
-          patientEmail: input.email,
-          appointmentType: input.type,
-          startTime: startDateTime,
-          endTime: endDateTime,
-          date: new Date(input.date),
-          googleEventId: eventId,
-        }).returning();
+    if (error instanceof TRPCError) {
+      throw error;
+    }
 
-        console.log('Database record created');
-
-        return {
-          success: true,
-          appointment: newAppointment,
-          calendarEventId: eventId
-        };
-      } catch (error) {
-        console.error("Detailed appointment creation error:", error);
-        
-        if (error instanceof TRPCError) {
-          throw error;
-        }
-
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error instanceof Error ? error.message : "Failed to create appointment",
-          cause: error,
-        });
-      }
-    }),
-
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: error instanceof Error ? error.message : "Failed to create appointment",
+      cause: error,
+    });
+  }
+}),
 getAvailableSlots: publicProcedure
 .input(z.object({
   date: z.string()

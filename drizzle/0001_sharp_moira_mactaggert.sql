@@ -1,0 +1,1 @@
+ALTER TABLE "smilestudio_messages" ADD COLUMN "is_starred" boolean DEFAULT false;
