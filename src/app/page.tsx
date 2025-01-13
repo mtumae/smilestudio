@@ -71,13 +71,10 @@ export default function Home(){
       <NavBar></NavBar>
       <div style={Img1Style} className="h-96">
         <section className="text-left w-1/2 mr-auto mt-auto text-white font-helvetica">
-        <h3 className="text-4xl font-bold mb-8">We Design Bespoke Smiles</h3>
-        <p>Our core treatments include Invisalign, braces, pediatric dentistry, smile design cases and teeth whitening and cleaning.</p>
+        <h3 className="text-4xl  mb-4 font-montserrat ">We Design Bespoke Smiles</h3>
+        <p className="text-othergray font-helvetica">Our core treatments include Invisalign, braces, pediatric dentistry, smile design cases and teeth whitening and cleaning.</p>
         </section>
       </div>
-
-
-
       <div className="grid grid-auto-fit m-20">
         <Card className="justify-items-center border-none shadow-none">
         <Calendar className="mt-10 " />
@@ -118,7 +115,7 @@ export default function Home(){
         <div className="grid grid-auto-fit m-10 gap-2">
               <Card style={Img2Style} className=" p-5">
                 <CardHeader>
-                <CardTitle className="text-xl font-bold text-white">Implants: A Brief History</CardTitle>
+                <CardTitle className="text-xl font-bold font-montserrat text-white">Implants: A Brief History</CardTitle>
                 <CardDescription className="text-white">Smile Studio Kenya</CardDescription>
                 </CardHeader>
                 <CardContent className=" text-white">
@@ -134,7 +131,8 @@ export default function Home(){
 
               <Card style={Img3Style} className="p-5">
                 <CardHeader>
-                <CardTitle className="text-xl font-bold text-white">Why you should find out if you might have gum disease?</CardTitle  >
+                <CardTitle className="text-xl font-bold font-montserrat text-white">Why you should find out if you might have gum disease?</CardTitle  >
+                <CardDescription className="text-white">Smile Studio Kenya</CardDescription>
                 </CardHeader>
                 <CardContent className=" text-white">
                 Gum disease is when your gums become swollen, sore or infected. 
