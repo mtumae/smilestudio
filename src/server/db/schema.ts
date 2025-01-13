@@ -10,7 +10,8 @@ import {
   text,
   timestamp,
   varchar,
-  boolean
+  boolean,
+  pgEnum
 } from "drizzle-orm/pg-core";
 
 import { type AdapterAccount } from "next-auth/adapters";
@@ -162,16 +163,50 @@ export const patients = createTable('patients', {
   .notNull(),
   
 });
+export const messageStatusEnum = pgEnum('message_status', ['unread', 'read', 'responded']);
+
 export const messages = createTable('messages', {
   id: serial('id').primaryKey(),
-  customerId: varchar('customer_id', { length: 255 }).notNull(),
+  customerId: varchar('customer_id', { length: 255 })
+    .notNull()
+    .references(() => users.id),
   content: text('content').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  status: varchar('status', { length: 20 }).notNull().default('unread'),
-  respondedBy: varchar('responded_by', { length: 255 }).references(() => users.id),
+  createdAt: timestamp('created_at')
+    .defaultNow()
+    .notNull(),
+  status: messageStatusEnum('status').notNull().default('unread'),
+  respondedBy: varchar('responded_by', { length: 255 })
+    .references(() => users.id),
   responseContent: text('response_content'),
+  isStarred: boolean('is_starred').default(false),
   responseTime: timestamp('response_time'),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .notNull(),
 });
+
+export const typingIndicators = createTable('typing_indicators', {
+  id: serial('id').primaryKey(),
+  userId: varchar('user_id', { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  conversationId: varchar('conversation_id', { length: 255 })
+    .notNull(),
+  createdAt: timestamp('created_at')
+    .defaultNow()
+    .notNull(),
+});
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+  customer: one(users, {
+    fields: [messages.customerId],
+    references: [users.id],
+  }),
+  responder: one(users, {
+    fields: [messages.respondedBy],
+    references: [users.id],
+  }),
+}));
 
 export const verificationTokens = createTable(
   "verification_token",
