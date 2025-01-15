@@ -63,11 +63,8 @@ export default function News(){
         
             <div className="">
                 <div className="h-96" style={Img1Style}></div>
-
+                    <h1>News</h1>
                 <div className="h-96" style={Img2Style}></div>
-
-       
-
                
             </div>
 
