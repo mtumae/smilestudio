@@ -157,6 +157,7 @@ export const satisfactionRatings = createTable('satisfaction_ratings', {
 export const settings = createTable('settings', {
   id: serial('id').primaryKey(),
   key: varchar('key', { length: 255 }).notNull(),
+  description: varchar("description",{length:255}).notNull(),
   isSet: boolean('isSet').default(true),
 });
 export const patients = createTable('patients', {

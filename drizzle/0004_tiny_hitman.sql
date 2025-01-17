@@ -1,0 +1,1 @@
+ALTER TABLE "smilestudio_settings" ADD COLUMN "description" varchar(255) NOT NULL;
