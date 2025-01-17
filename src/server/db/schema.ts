@@ -29,6 +29,9 @@ export const posts = createTable(
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
+    title: varchar("title", {length:256}),
+    subtitle: varchar("title", {length:256}),
+    body: varchar("body"),
     createdById: varchar("created_by", { length: 255 })
       .notNull()
       .references(() => users.id),
