@@ -207,6 +207,11 @@ export const messagesRelations = relations(messages, ({ one }) => ({
     references: [users.id],
   }),
 }));
+export const resetLink = createTable("reset_link", {
+  identifier: text("identifier").notNull(),
+  uuid: text("token").notNull().unique(),
+  expires: timestamp("expires").notNull(),
+});
 
 export const verificationTokens = createTable(
   "verification_token",
