@@ -38,6 +38,7 @@ export const posts = createTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
       () => new Date()
     ),
+
   },
   (example) => ({
     createdByIdIdx: index("created_by_idx").on(example.createdById),
