@@ -30,7 +30,7 @@ export default function SignUp() {
   const router = useRouter();
 
   const signUpMutation = api.user.signUp.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       const result = await signIn("credentials", {
         email,
         password,
@@ -44,6 +44,7 @@ export default function SignUp() {
         router.push(result.url);
       }
     },
+    
     onError: (error) => setError(error.message),
   });
 
@@ -150,7 +151,7 @@ export default function SignUp() {
                 type="submit" 
                 className="w-full bg-ssblue hover:bg-ssblue/90 text-white transition-colors duration-300"
               >
-                {signUpMutation.isLoading ? "Creating account..." : "Sign Up"}
+                {signUpMutation.isPending ? "Creating account..." : "Sign Up"}
               </Button>
             </form>
           </CardContent>
