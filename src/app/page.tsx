@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Slash, SlashIcon } from "lucide-react";
 import { Facebook, Instagram, MoveUpRight, MoveRight} from "lucide-react";
 
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -80,7 +81,9 @@ export default function Home(){
         <Calendar className="mt-10 " />
           <CardHeader className="text-xl font-bold font-helvetica">Book an appointment with us</CardHeader>
           <CardContent>
+            <Link href="/book">
             <Button className="bg-ssblue">Book now</Button>
+            </Link>
           </CardContent>
         </Card>
 
