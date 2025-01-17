@@ -314,7 +314,7 @@ return (
                   >
                     Tell Us About Yourself
                   </motion.h1>
-                  <p className="text-gray-600 mt-3">We'll use these details to contact you about your appointment</p>
+                  <p className="text-gray-600 mt-3">We&apos;ll use these details to contact you about your appointment</p>
                 </div>
  
                 <motion.div 
