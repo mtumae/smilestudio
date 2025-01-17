@@ -44,7 +44,16 @@ import Footer from "../footer/page";
 import NavBar from "~/components/ui/navigation";
 
 const Img1Style={
-    backgroundImage: 'url(/signblur.jpg)', 
+    backgroundImage: 'url(/teeth.jpg)',
+    padding: '40px' 
+  
+  }
+
+  const Img2Style={
+    backgroundImage: 'url(/toothbrush.jpg)',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    display: 'flex',
     margin: '40px'
   }
 
@@ -53,44 +62,13 @@ export default function Services(){
     return(
         <div>
             <NavBar></NavBar>
-            <h1 className="text-4xl font-montserrat m-10 text-ssgray">Hygiene</h1>
-            <div className="grid grid-cols-1 w-full p-5">
-                <Card  className="border-none font-montserrat shadow-lg">
-                    <CardHeader>
-                        <CardTitle>General Cleaning</CardTitle>
-                    </CardHeader>
-                    <CardContent className="font-helvetica">
-                        Dentistry advocates for the principle of prevention. 
-                        It is recommended to have biannual cleanings and examinations. 
-                        Not only do they help you quash dental problems before they arise, 
-                        they leave your gums healthier, and your teeth cleaner and whiter.
-                         A professional cleaning removes hard plaque that cannot be removed by 
-                         brushing and flossing alone. It also involves a fluoride treatment and 
-                         polish to help protect and soothe your teeth and gums. 
-
-                        At Smile Studio the average hygiene visit lasts about one hour, 
-                        this enables our doctors check your gum health, the condition of your teeth and fillings, 
-                        do a thorough cleaning and polishing and offer individualised preventive advice to help you 
-                        stay healthy.
-                         <br></br>
-                         <br></br>
-                         What are some preventative measures I can take?
-                            <li>Brush with a fluoride toothpaste</li>
-                            <li>Use a soft-bristled toothbrush after each meal</li>
-                            <li> Floss daily at least before bedtime</li>
-                            <li>Use an oral rinse after flossing</li>
-                            <li>Avoid sugary foods, coffee, and tobacco</li>
-
-            
-                    </CardContent>
-                </Card>
+         
+                
+                <div style={Img1Style} className="grid grid-cols-1 items-center">
                 <h1 className="text-4xl font-montserrat m-10 text-ssgray">Routine Dentistry</h1>
-                <Carousel>
-                <CarouselContent>
-                    <CarouselItem className="basis-1/3">
-                        <Card className="">
+                        <Card className="m-2 bg-transparent border-none">
                             <CardHeader>
-                                <CardTitle>Fillings</CardTitle>
+                                <CardTitle className="text-2xl font-montserrat">Fillings</CardTitle>
                             </CardHeader>
                             <CardContent>
                             Used to prevent the spread of tooth decay or correct any cosmetic damage, 
@@ -104,15 +82,13 @@ export default function Services(){
                             and composite resin, the colour of which can be customized to match your natural teeth.
                             </CardContent>
                         </Card>
+            
                     
-                    </CarouselItem>
 
-                        
-
-                    <CarouselItem className="basis-1/3">
-                    <Card className="">
+            
+                    <Card className="m-2 bg-transparent">
                         <CardHeader>
-                                <CardTitle>Composite Resin</CardTitle>
+                                <CardTitle className="text-2xl font-montserrat">Composite Resin</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <CardContent>
@@ -123,13 +99,11 @@ export default function Services(){
                             </CardContent>
                         </CardContent>
                         </Card>
-                    
-                    </CarouselItem>
-
-                    <CarouselItem className="basis-1/3">
-                    <Card className="">
+           
+                   
+                    <Card className="m-2 bg-transparent border-none">
                         <CardHeader>
-                                <CardTitle>Crowns and Bridges</CardTitle>
+                                <CardTitle className="text-2xl font-montserrat">Crowns and Bridges</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <CardContent>
@@ -148,11 +122,10 @@ export default function Services(){
                         </CardContent>
                         </Card>
                     
-                    </CarouselItem>
-                </CarouselContent>
-                </Carousel>
-
-            </div>
+             
+          
+                </div>
+        
             <Footer></Footer>
 
         </div>
