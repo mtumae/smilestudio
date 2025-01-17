@@ -16,13 +16,16 @@ import { eq } from "drizzle-orm";
 const emailService = new EmailService();
 
 export const userRouter = createTRPCRouter({
-    getMe: publicProcedure
-    .query(async ({ ctx }) => {
-       return   await ctx.db.query.users.findFirst({
-        where: (users, { eq }) => eq(users.id, ctx.session?.user.id ?? ""),
-      });
-
-    }),
+  getMe: publicProcedure
+  .query(async ({ ctx }) => {
+    if (!ctx.session?.user?.id) return null;
+    
+    const user = await ctx.db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.id, ctx.session?.user.id ?? "0"),
+    });
+    
+    return user ?? null;
+  }),
     signUp: publicProcedure
     .input(z.object({
       email: z.string().email(),
