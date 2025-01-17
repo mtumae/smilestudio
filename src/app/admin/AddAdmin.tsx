@@ -46,7 +46,7 @@ const AddAdminDialog = () => {
   const utils = api.useContext();
   const addAdminMutation = api.settings.addAdmin.useMutation({
     onSuccess: () => {
-      utils.admin.invalidate();
+      addAdminMutation.reset()
       setOpen(false);
       existingUserForm.reset();
       newUserForm.reset();
