@@ -26,6 +26,22 @@ import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "~/hooks/use-toast";
 
+// Add type for appointment type
+interface AppointmentType {
+  id: number;
+  name: string;
+  duration: number;
+  icon: string;
+  description: string;
+  benefits: string[];
+}
+
+// Add type for booked slot
+interface BookedSlot {
+  start: Date;
+  end: Date;
+}
+
 const APPOINTMENT_TYPES = [
   { 
     id: 1, 
@@ -122,10 +138,10 @@ const generateAvailableTimeSlots = (): void => {
   if (!date) return;
 
   const slots: string[] = [];
-  const selectedService = APPOINTMENT_TYPES.find(t => t.name === type);
+  const selectedService = APPOINTMENT_TYPES.find((t: AppointmentType) => t.name === type);
   const duration = selectedService?.duration ?? 60;
 
-  const bookedSlots = existingAppointments.data?.map(apt => ({
+  const bookedSlots: BookedSlot[] = existingAppointments.data?.map(apt => ({
     start: new Date(apt.startTime),
     end: new Date(apt.endTime)
   })) ?? [];
@@ -137,7 +153,7 @@ const generateAvailableTimeSlots = (): void => {
   while (currentSlot < dayEnd) {
     const slotEnd = addMinutes(currentSlot, duration);
 
-    const isOverlapping = bookedSlots.some(bookedSlot => {
+    const isOverlapping = bookedSlots.some((bookedSlot: BookedSlot) => {
       return (
         (currentSlot >= bookedSlot.start && currentSlot < bookedSlot.end) ||
         (slotEnd > bookedSlot.start && slotEnd <= bookedSlot.end) ||
@@ -314,7 +330,7 @@ return (
                   >
                     Tell Us About Yourself
                   </motion.h1>
-                  <p className="text-gray-600 mt-3">We'll use these details to contact you about your appointment</p>
+                  <p className="text-gray-600 mt-3">We&apos;ll use these details to contact you about your appointment</p>
                 </div>
  
                 <motion.div 
