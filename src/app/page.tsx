@@ -55,7 +55,7 @@ export default function Home(){
     justifyContent: 'center',
     alignItems: 'left',
     padding: '20px',
-    margin: '20px',
+    margin: '20px'
   };
 
 

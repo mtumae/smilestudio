@@ -25,7 +25,7 @@ const navLinks = [
     );
  
     return (
-        <div className="overflow-hidden">
+        <div className="overflow-hidden mb-10 pt-10">
             <div className="relative self-end">
                 <div className="flex justify-between items-center">
                     <Image
