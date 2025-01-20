@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 
 import React from 'react'
 import { api } from "~/trpc/react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 
 const posts = {
     title : "",
@@ -21,15 +22,16 @@ export default function Blog(){
     return(
         <div>
             <h1 className="text-4xl font-montserrat mt-10 justify-self-center">Blog Posts</h1>
-            <h1 className="justify-self-center">Create a post for news or edit an old one</h1>
+            <h1 className="justify-self-center">Create or edit a blog post for the news page</h1>
 
-            <Tabs defaultValue="create" className="justify-self-center mt-10 w-full">
+            <Tabs defaultValue="create" className="w-full">
                 <TabsList className="">
                     <TabsTrigger value="create">Create post</TabsTrigger>
                     <TabsTrigger value="edit">Edit post</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="create" className="grid grid-cols-1 w-full">
+                
                         <Label className="w-full">Main Title</Label>
                         <Input className="mt-2 mb-2" name="title" placeholder="Enter Title..."></Input>
                 
@@ -48,9 +50,21 @@ export default function Blog(){
                     <div className="grid grid-cols-1 m-10 gap-3">
                        
                             { posts.data?.map(( post ) =>
-                            <div className=" m-10">
-                            <h1 key={post.id}>{post.id} {post.title} {post.body} </h1>
-                                <Button className="bg-transparent text-ssblue">Edit<Edit/></Button> <Button className="bg-red text-white">Delete<Delete /></Button>
+                            <div className="">
+                                <Card key={post.id}>
+                                    <CardHeader>
+                                        <CardTitle>{post.id}.{post.title}</CardTitle>
+                                        <h1 className="text-sm text-darkgray">{post.createdAt.toString()};</h1>
+                                    </CardHeader>
+                                    <CardContent>
+                                    {post.body} 
+                                    </CardContent>
+                                    <CardFooter>
+                                    <Button className="bg-ssblack text-ssblue mr-3">Edit<Edit/></Button> 
+                                    <Button className="bg-red text-white">Delete<Delete /></Button>
+                                    </CardFooter>
+                                </Card>
+                                
                             </div>
                             )}
                     
