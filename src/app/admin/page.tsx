@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import SettingsPage from './Settings';
 import { AppointmentsPage } from './AppointmentsPage';
+import {PatientsPage} from './PatientPage';
 
 
 import Blog from './news';
@@ -38,7 +39,7 @@ const renderView = (view: ViewType) => {
     case 'appointments':
       return <div> <AppointmentsPage/> </div>;
     case 'patients':
-      return <div>Patients View</div>;
+      return <div><PatientsPage/></div>;
     case 'messages':
       return <div>Messages View</div>;
     case 'settings':

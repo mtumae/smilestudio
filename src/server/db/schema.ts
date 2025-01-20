@@ -58,6 +58,7 @@ export const users = createTable("user", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   phonenumber: varchar("phonenumber", { length: 255 }).unique(),
   role: varchar("role", { length: 255 }).notNull().default("client"),
+   
   password: text("password"),
   emailVerified: timestamp("email_verified", {
     mode: "date",
@@ -138,7 +139,11 @@ export const appointments = createTable('appointments', {
   endTime: timestamp('end_time').notNull(),
   status:varchar("status",{length:255}).notNull(),
   googleEventId: varchar('google_event_id', { length: 255 }),
-});
+}, (table) => ({
+  startTimeIdx: index('appointment_start_time_idx').on(table.startTime),
+  statusIdx: index('appointment_status_idx').on(table.status),
+  typeIdx: index('appointment_type_idx').on(table.appointmentType),
+}));
 
 export const appointmentTypes = createTable('appointment_types', {
   id: serial('id').primaryKey(),

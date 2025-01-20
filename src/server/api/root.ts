@@ -6,6 +6,7 @@ import { dashboardRouter } from "./routers/admin";
 import { settings } from "../db/schema";
 import { settingsRouter } from "./routers/settings";
 import { businessMessageRouter } from "./routers/messaging";
+import { patientRouter } from "./routers/patients";
 
 /**
  * This is the primary router for your server.
@@ -18,7 +19,8 @@ export const appRouter = createTRPCRouter({
   appointment: appointmentRouter,
   admin: dashboardRouter,
   settings: settingsRouter,
-  messages: businessMessageRouter
+  messages: businessMessageRouter,
+  patient: patientRouter
 });
 
 // export type definition of API
