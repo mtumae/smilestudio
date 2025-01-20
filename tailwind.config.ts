@@ -90,7 +90,8 @@ export default {
 	  othergray: '#e0e0e0',
 	  darkgray: '#696565',
       white: '#ffffff',
-      red: '#eb2a2a'
+      red: '#eb2a2a',
+	  mutedblu: '#8cbfb8'
   	}
   },
   plugins: [

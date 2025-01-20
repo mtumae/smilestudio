@@ -1,7 +1,14 @@
 "use client"
 import Image from "next/image";
-import { Slash, SlashIcon } from "lucide-react";
+import { ArrowDownNarrowWide, Route, Slash, SlashIcon } from "lucide-react";
 import { Facebook, Instagram, MoveUpRight, MoveRight} from "lucide-react";
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible"
+
 
 import {
     Carousel,
@@ -11,9 +18,7 @@ import {
     CarouselPrevious,
   } from "~/components/ui/carousel"
   
-
-
-
+import { CirclePlus, ChevronDown, CircleHelp } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,89 +50,119 @@ import NavBar from "~/components/ui/navigation";
 
 const Img1Style={
     backgroundImage: 'url(/teeth.jpg)',
-    padding: '40px' 
   
   }
 
-  const Img2Style={
-    backgroundImage: 'url(/toothbrush.jpg)',
-    backgroundSize: 'cover', 
-    backgroundPosition: 'center',  
-    display: 'flex',
-    margin: '40px'
+const Img2Style={
+    backgroundImage: 'url(/mirror.jpg)', 
+}
+  const Img3Style={
+    backgroundImage: 'url(/chairblur.jpeg)',
+   
   }
 
+  const Img4Style={
+    backgroundImage: 'url(/chair2blur.jpg)',
+
+  }
 
 export default function Services(){
     return(
-        <div>
+        <div  className="overflow-x-hidden">
             <NavBar></NavBar>
          
-                
-                <div style={Img1Style} className="grid grid-cols-1 items-center">
-                <h1 className="text-4xl font-montserrat m-10 text-ssgray">Routine Dentistry</h1>
-                        <Card className="m-2 bg-transparent border-none">
-                            <CardHeader>
-                                <CardTitle className="text-2xl font-montserrat">Fillings</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                            Used to prevent the spread of tooth decay or correct any cosmetic damage, 
-                            a filling is just one of the ways our dentists preserve your health. 
-                            At Smile Studio we offer metal free composite resin fillings(white fillings).
-                            Used to arrest and prevent the spread of tooth decay or correct any cosmetic damage and functional impairment,
-                            a filling is just one of the ways our dentists preserve your health. Before placement, 
-                            any decay must be cleaned out. We offer local anaesthesia along with sedation (when indicated)
-                            to ensure maximum comfort for our patients. There are two different types of fillings:
-                            amalgam (otherwise known as silver fillings) 
-                            and composite resin, the colour of which can be customized to match your natural teeth.
-                            </CardContent>
-                        </Card>
-            
-                    
+            <div  className="grid grid-auto-fit gap-4 m-10 mt-20 ">
 
-            
-                    <Card className="m-2 bg-transparent">
-                        <CardHeader>
-                                <CardTitle className="text-2xl font-montserrat">Composite Resin</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <CardContent>
-                            Since the colour of a composite resin filling can be customized, 
-                            it is the most aesthetically pleasing option. However, 
-                            it is more expensive and not as strong as an amalgam filling. 
-                            Composite resin is ideal for repairing chipped or cracked teeth, filling in a gap between teeth, correcting dental discolouration, protecting any exposed tooth root from gum recession, or changing the shape of teeth. Patients may also choose composite resin for cavity fillings as they are bonded to the teeth in layers and therefore require less drilling away of the natural tooth.
-                            </CardContent>
-                        </CardContent>
-                        </Card>
-           
-                   
-                    <Card className="m-2 bg-transparent border-none">
-                        <CardHeader>
-                                <CardTitle className="text-2xl font-montserrat">Crowns and Bridges</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <CardContent>
-                                A crown, otherwise known as a cap, is custom-fitted to your bite 
-                                and is placed over your natural tooth or over dental implants. 
-                                Crowns are recommended if one of your teeth has broken or become 
-                                significantly weakened by an excess of decay or an especially large filling. 
-                                The crown strengthens the tooth and maintains its usefulness and appearance.
 
-                                A bridge refers to multiple attached crowns used to replace one or more missing 
-                                teeth and can be placed over existing teeth or dental implants. 
-                                We recommend this procedure for those who have an intact tooth without root decay. 
-                                The tooth may be damaged or decayed on the surface.
-                         
-                            </CardContent>
-                        </CardContent>
-                        </Card>
-                    
+            <h1 className="text-5xl font-montserrat m-10 mt-20 w-1/2 text-ssgray">
+              Routine Dentistry
+            </h1>
+
+            <Card className="w-auto hover:border-ssblue ">
+              <CardHeader className="font-montserrat text-lg">
+              Fillings
+              </CardHeader>
+              <CardContent>
+              At Smile Studio we offer metal free composite resin fillings
+              used to prevent the spread of tooth decay or correct any cosmetic damage, 
+              a filling is just one of the ways our dentists preserve your health.
+              </CardContent>
+            </Card>
+
+            <Card className="w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg grid grid-cols-2">
+              Root Canal
+              <Image className="-mt-1" alt="root canal" src="/root-canal.png" width={30} height={30}/>
+              </CardHeader>
+              <CardContent>
+              Teeth that require Root Canal treatment sometimes have symptoms such as
+              constant throbbing or sharp pain, 
+              lingering sensitivity to hot or cold, 
+              discolouration of the tooth, swelling of the adjacent gums or tenderness of the tooth.
+
+              </CardContent>
+            </Card>
+
+            <Card className="w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg">
+              Extractions
+              </CardHeader>
+              <CardContent>
+              Our dentists make every effort to preserve your natural teeth. 
+              Depending on which tooth is removed, 
+              we can offer you a replacement in the form of a dental implant or alternative oral
+              prosthetic.
+              </CardContent>
+            </Card>
+
+            <Card className=" w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg">
+              Crowns and Bridges
+              </CardHeader>
+              <CardContent>
+              A bridge refers to multiple attached crowns used to replace one or more missing teeth 
+              and can be placed over existing teeth or dental implants. 
+              We recommend this procedure for those who have an intact tooth without root decay. 
+              The tooth may be damaged or decayed on the surface.
+
+              </CardContent>
+            </Card>
+
+            <Card className=" w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg">
+              Dentures
+              </CardHeader>
+              <CardContent>
              
-          
-                </div>
-        
-            <Footer></Footer>
+              Depending on the amount of teeth missing and the health of those that are left in the mouth, 
+              we may suggest partial or full dentures. During your consultation, 
+              we’ll assess all your options and you can choose what you feel most comfortable with.
 
+              </CardContent>
+            </Card>
+
+            <Card className=" w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg">
+              Wisdom Tooth Removal
+              </CardHeader>
+              <CardContent className="">
+              Wisdom teeth often become a problem because there is not enough space to 
+              allow them to erupt normally.
+              This can also cause destruction of the neighbour’s roots in some cases.
+        
+
+              </CardContent>
+            </Card>
+
+            
+
+
+  
+
+
+
+            </div>
+            <Footer></Footer>
         </div>
     )
 }
