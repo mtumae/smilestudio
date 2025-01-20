@@ -25,11 +25,12 @@ const navLinks = [
     );
  
     return (
-        <div className="overflow-hidden mb-10 pt-10">
+        <div className="overflow-hidden pt-10">
             <div className="relative self-end">
                 <div className="flex justify-between items-center">
                     <Image
                         src="/logo.png"
+                        className="mb-10"
                         alt="Smile studio logo"
                         width={300}
                         height={300}
