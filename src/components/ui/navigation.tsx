@@ -36,7 +36,7 @@ const navLinks = [
                         height={300}
                     />
                     {session && (
-                        <div className="absolute right-4 top-4">
+                        <div className="mr-10 justify-self-end">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="flex items-center">
                                     <Avatar className="border-2 border-ssblue">
@@ -45,20 +45,26 @@ const navLinks = [
                                     </Avatar>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
+                                
                                     <DropdownMenuLabel>{session.user?.name ?? "Client"}</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
+                                    <Link href="/profile">
+                                    <DropdownMenuItem >
                                         <User2 size={16} className="mr-2" />
                                         Profile
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
+                                    </Link>
+                                    <Link href='/settings'>
+                                    <DropdownMenuItem>                              
                                         <Settings size={16} className="mr-2" />
                                         Settings
                                     </DropdownMenuItem>
+                                    </Link>      
                                     <DropdownMenuItem className="text-red" onClick={() => signOut()}>
                                         <LogOut size={16} className="mr-2" />
                                         Logout
                                     </DropdownMenuItem>
+                                   
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>

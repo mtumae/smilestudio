@@ -91,6 +91,8 @@ export default function News(){
                 </Carousel>
                   </div> 
             </div>
+
+            <Footer></Footer>
         </div>
     )
 }

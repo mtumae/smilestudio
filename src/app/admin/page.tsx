@@ -11,20 +11,24 @@ import Image from "next/image";
 import SettingsPage from './Settings';
 import { AppointmentsPage } from './AppointmentsPage';
 
+
+import Blog from './news';
+
 type NavItem = {
   icon: React.ElementType;
   label: string;
   path: ViewType;
 };
 
-type ViewType = 'dashboard' | 'appointments' | 'patients' | 'messages' | 'settings'|'post';
+type ViewType = 'dashboard' | 'appointments' | 'patients' | 'messages' | 'settings'|'post'|'blog';
 
 const navItems: NavItem[] = [
   { icon: FiGrid, label: 'Dashboard', path: 'dashboard' },
   { icon: FiCalendar, label: 'Appointments', path: 'appointments' },
   { icon: FiUsers, label: 'Patients', path: 'patients' },
   { icon: FiMessageSquare, label: 'Messages', path: 'messages' },
-  { icon: FiSettings, label: 'Settings', path: 'settings' }
+  { icon: FiSettings, label: 'Settings', path: 'settings' },
+  { icon:FiMessageSquare, label:'Blog', path:'blog'}
 ];
 
 const renderView = (view: ViewType) => {
@@ -39,6 +43,8 @@ const renderView = (view: ViewType) => {
       return <div>Messages View</div>;
     case 'settings':
       return <div> <SettingsPage/></div>;
+    case 'blog':
+      return <div><Blog></Blog></div>
  
     default:
       return <div>View not found</div>;
@@ -66,7 +72,7 @@ export default function DashboardLayout() {
 
                   <Image 
                     src="/logo.png" 
-                    alt="Company Logo"
+                    alt="Smile Studio Logo"
                     width={140}
                     height={80}
                   />

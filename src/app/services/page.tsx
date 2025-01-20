@@ -80,7 +80,7 @@ export default function Services(){
 
             <Card className="w-auto hover:border-ssblue ">
               <CardHeader className="font-montserrat text-lg">
-              Fillings
+              Fillings 
               </CardHeader>
               <CardContent>
               At Smile Studio we offer metal free composite resin fillings
@@ -91,21 +91,19 @@ export default function Services(){
 
             <Card className="w-auto hover:border-ssblue">
               <CardHeader className="font-montserrat text-lg grid grid-cols-2">
-              Root Canal
-              <Image className="-mt-1" alt="root canal" src="/root-canal.png" width={30} height={30}/>
+              Root Canal 
               </CardHeader>
               <CardContent>
               Teeth that require Root Canal treatment sometimes have symptoms such as
               constant throbbing or sharp pain, 
               lingering sensitivity to hot or cold, 
               discolouration of the tooth, swelling of the adjacent gums or tenderness of the tooth.
-
               </CardContent>
             </Card>
 
             <Card className="w-auto hover:border-ssblue">
               <CardHeader className="font-montserrat text-lg">
-              Extractions
+              Extractions 
               </CardHeader>
               <CardContent>
               Our dentists make every effort to preserve your natural teeth. 
@@ -117,7 +115,7 @@ export default function Services(){
 
             <Card className=" w-auto hover:border-ssblue">
               <CardHeader className="font-montserrat text-lg">
-              Crowns and Bridges
+              Crowns and Bridges 
               </CardHeader>
               <CardContent>
               A bridge refers to multiple attached crowns used to replace one or more missing teeth 
@@ -130,7 +128,7 @@ export default function Services(){
 
             <Card className=" w-auto hover:border-ssblue">
               <CardHeader className="font-montserrat text-lg">
-              Dentures
+              Dentures 
               </CardHeader>
               <CardContent>
              
