@@ -1,10 +1,17 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
-import { appointments, accounts, settings } from "~/server/db/schema";
+import { appointments, accounts, settings, patients, users } from "~/server/db/schema";
 import { GoogleCalendarService } from "~/lib/calender";
-import { eq, and, gte, lte, desc, or, like, SQL } from "drizzle-orm";
+import { eq, and, gte, lte, desc, or, like, SQL, sql } from "drizzle-orm";
 import { EmailService } from "~/lib/email";  
+import {
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  subWeeks,
+} from "date-fns";
 
 const createAppointmentSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -165,7 +172,123 @@ export const appointmentRouter = createTRPCRouter({
       });
     }
   }),
+  getStats: publicProcedure.query(async ({ ctx }) => {
+    const now = new Date();
+    const todayStart = startOfDay(now);
+    const todayEnd = endOfDay(now);
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
+    const lastWeekStart = startOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
 
+    // Main data query
+    const allAppointments = await ctx.db
+      .select({
+        id: appointments.id,
+        status: appointments.status,
+        startTime: appointments.startTime,
+        appointmentType: appointments.appointmentType,
+      })
+      .from(appointments)
+      .where(
+        and(
+          gte(appointments.startTime, lastWeekStart),
+          lte(appointments.startTime, weekEnd)
+        )
+      );
+
+    // Validate and filter time periods
+    const today = allAppointments.filter(app => 
+      app.startTime >= todayStart && 
+      app.startTime <= todayEnd
+    );
+    
+    const thisWeek = allAppointments.filter(app => 
+      app.startTime >= weekStart && 
+      app.startTime <= weekEnd
+    );
+    
+    const lastWeek = allAppointments.filter(app => 
+      app.startTime >= lastWeekStart && 
+      app.startTime < weekStart
+    );
+
+    // Today's stats
+    const todayTotal = today.length;
+    const todayRemaining = today.filter(app => app.status !== "done").length;
+
+    // Awaiting approval count
+    const awaitingCount = allAppointments.filter(app => app.status === "AwAp").length;
+
+    // Weekly completion stats
+    const thisWeekTotal = thisWeek.length;
+    const thisWeekCompleted = thisWeek.filter(app => app.status === "done").length;
+    const lastWeekTotal = lastWeek.length;
+    const lastWeekCompleted = lastWeek.filter(app => app.status === "done").length;
+
+    // Calculate completion rates with validation
+    const thisWeekCompletionRate = thisWeekTotal > 0
+      ? Math.min(100, Math.max(0, Math.round((thisWeekCompleted / thisWeekTotal) * 100)))
+      : 0;
+
+    const lastWeekCompletionRate = lastWeekTotal > 0
+      ? Math.min(100, Math.max(0, Math.round((lastWeekCompleted / lastWeekTotal) * 100)))
+      : 0;
+
+    // Calculate appointment type distribution
+    const typeDistribution = thisWeek.reduce((acc, app) => {
+      acc[app.appointmentType] = (acc[app.appointmentType] ?? 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Find most common type with validation
+    let mostCommonType = "No appointments";
+    let commonTypeCount = 0;
+
+    if (thisWeekTotal > 0) {
+      const sortedTypes = Object.entries(typeDistribution)
+        .sort(([,a], [,b]) => b - a);
+      
+      if (sortedTypes.length > 0) {
+        const [type, count] = sortedTypes[0] ?? ["No appointments", 0];
+        mostCommonType = type;
+        commonTypeCount = count;
+      }
+    }
+
+    // Calculate percentage with bounds checking
+    const commonTypePercentage = thisWeekTotal > 0
+      ? Math.min(100, Math.max(0, Math.round((commonTypeCount / thisWeekTotal) * 100)))
+      : 0;
+
+    // Validation logging (can be removed in production)
+    console.log({
+      thisWeekTotal,
+      thisWeekCompleted,
+      lastWeekTotal,
+      lastWeekCompleted,
+      typeDistribution,
+      commonTypeCount,
+      thisWeekCompletionRate,
+      commonTypePercentage
+    });
+
+    return {
+      todayCount: todayTotal,
+      todayRemaining,
+      awaitingCount,
+      weeklyCompletionRate: thisWeekCompletionRate,
+      weeklyCompletion: {
+        improvement: Math.min(100, Math.max(-100, thisWeekCompletionRate - lastWeekCompletionRate)),
+      },
+      mostCommonType,
+      commonTypePercentage,
+      // Debug info (can be removed in production)
+      debug: {
+        thisWeekTotal,
+        commonTypeCount
+      }
+    };
+  }),
   getAvailableSlots: publicProcedure
     .input(z.object({
       date: z.string()
@@ -230,25 +353,60 @@ export const appointmentRouter = createTRPCRouter({
         });
       }
     }),
-
-  updateAppointmentStatus: protectedProcedure
-    .input(updateAppointmentStatusSchema)
+    updateAppointmentStatus: publicProcedure
+    .input(z.object({
+      appointmentId: z.number(),
+      status: z.enum(["AwAp", "booked", "done"])
+    }))
     .mutation(async ({ ctx, input }) => {
-      try {
-        const [updatedAppointment] = await ctx.db
+      const { appointmentId, status } = input;
+  
+      // Begin transaction to handle both updates
+      return await ctx.db.transaction(async (tx) => {
+        // Update appointment status
+        const [updatedAppointment] = await tx
           .update(appointments)
-          .set({ status: input.status })
-          .where(eq(appointments.id, input.appointmentId))
-          .returning();
-
-        return updatedAppointment;
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update appointment status",
-          cause: error,
-        });
-      }
+          .set({ status })
+          .where(eq(appointments.id, appointmentId))
+          .returning({
+            patientEmail: appointments.patientEmail
+          });
+  
+        // If marked as done, update patient records
+        if (status === "done" && updatedAppointment) {
+          // Find the user by email
+          const [user] = await tx
+            .select()
+            .from(users)
+            .where(eq(users.email, updatedAppointment.patientEmail));
+  
+          if (user) {
+            // Check if patient record exists
+            const [existingPatient] = await tx
+              .select()
+              .from(patients)
+              .where(eq(patients.id, user.id));
+  
+            if (existingPatient) {
+              // Update existing patient count
+              await tx
+                .update(patients)
+                .set({ count: sql`${patients.count} + 1` })
+                .where(eq(patients.id, user.id));
+            } else {
+              // Create new patient record
+              await tx
+                .insert(patients)
+                .values({
+                  id: user.id,
+                  count: 1
+                });
+            }
+          }
+        }
+  
+        return { success: true };
+      });
     }),
 
   deleteAppointment: protectedProcedure
@@ -258,22 +416,22 @@ export const appointmentRouter = createTRPCRouter({
     }))
     .mutation(async ({ ctx, input }) => {
       try {
-        const account = await ctx.db.query.accounts.findFirst({
-          where: and(
-            eq(accounts.userId, ctx.session.user.id),
-            eq(accounts.provider, 'google')
-          ),
-        });
+        // const account = await ctx.db.query.accounts.findFirst({
+        //   where: and(
+        //     eq(accounts.userId, ctx.session.user.id),
+        //     eq(accounts.provider, 'google')
+        //   ),
+        // });
 
-        if (!account?.refresh_token) {
-          throw new TRPCError({
-            code: 'UNAUTHORIZED',
-            message: 'Google Calendar access not authorized.'
-          });
-        }
+        // if (!account?.refresh_token) {
+        //   throw new TRPCError({
+        //     code: 'UNAUTHORIZED',
+        //     message: 'Google Calendar access not authorized.'
+        //   });
+        // }
 
-        const calendarService = new GoogleCalendarService(account.refresh_token);
-        await calendarService.deleteAppointment(input.googleEventId);
+        // const calendarService = new GoogleCalendarService(account.refresh_token);
+        // await calendarService.deleteAppointment(input.googleEventId);
 
         await ctx.db.delete(appointments)
           .where(eq(appointments.id, input.appointmentId));
