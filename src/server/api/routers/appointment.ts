@@ -1,10 +1,9 @@
-
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure,publicProcedure } from "~/server/api/trpc";
-import { appointments, accounts } from "~/server/db/schema";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import { appointments, accounts, settings } from "~/server/db/schema";
 import { GoogleCalendarService } from "~/lib/calender";
-import { eq, and, gte, lte } from "drizzle-orm";
+import { eq, and, gte, lte, desc, or, like, SQL } from "drizzle-orm";
 import { EmailService } from "~/lib/email";  
 
 const createAppointmentSchema = z.object({
@@ -17,120 +16,240 @@ const createAppointmentSchema = z.object({
   googleEventId: z.string().optional(),
 });
 
+const AppointmentStatus = z.enum(["AwAp", "booked", "done"]);
+
+const updateAppointmentStatusSchema = z.object({
+  appointmentId: z.number(),
+  status: AppointmentStatus,
+});
+
+const getAppointmentsSchema = z.object({
+  status: AppointmentStatus.optional(),
+  search: z.string().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+});
+
 export const appointmentRouter = createTRPCRouter({
-  // Modified createAppointment procedure
-createAppointment: protectedProcedure
-.input(createAppointmentSchema)
-.mutation(async ({ ctx, input }) => {
-  try {
-    console.log('Starting appointment creation process...');
-    
-    const account = await ctx.db.query.accounts.findFirst({
-      where: and(
-        eq(accounts.userId, ctx.session.user.id),
-        eq(accounts.provider, 'google')
-      ),
-    });
-
-    console.log('Google account found:', !!account);
-
-    let googleEventId: string | undefined;
-
-    // Try Google Calendar if available
-    if (account?.refresh_token) {
-      const calendarService = new GoogleCalendarService(account.refresh_token);
-      const startDateTime = new Date(input.startTime);
-      const endDateTime = new Date(input.endTime);
+  createAppointment: publicProcedure
+  .input(createAppointmentSchema)
+  .mutation(async ({ ctx, input }) => {
+    try {
+      console.log('Starting appointment creation process...');
       
-      googleEventId = await calendarService.scheduleAppointment({
-        email: ctx.session.user.email!,
-        startTime: startDateTime,
-        endTime: endDateTime,
-        summary: `Dental Appointment - ${input.name}`,
-        description: `Appointment Type: ${input.type}\nPatient Email: ${input.email}`
+      const settingq = await ctx.db.query.settings.findFirst({
+        where: eq(settings.id, 1),
       });
 
-      console.log('Calendar event created, ID:', googleEventId);
-    } else {
-      // Send confirmation email if Google Calendar is not available
-      console.log('No Google Calendar access, sending email confirmation instead');
+      const initialStatus = settingq?.isSet ? "AwAp" : "booked";
+
+      // Create proper Date objects
+      const appointmentDate = new Date(input.date);
+      const startTime = new Date(input.startTime);
+      const endTime = new Date(input.endTime);
+
+      // Send email to patient
       const emailService = new EmailService();
       
       await emailService.sendConfirmationEmail(
         input.email,
         input.name,
         input.type,
-        new Date(input.startTime),
-        new Date(input.date)
+        startTime,
+        endTime,
+        appointmentDate
       );
 
-      // Schedule a reminder email for one day before the appointment
-      const reminderDate = new Date(input.date);
+      // Schedule reminder email
+      const reminderDate = new Date(appointmentDate);
       reminderDate.setDate(reminderDate.getDate() - 1);
       
-      // You might want to use a proper job scheduler here
-      setTimeout(async () => {
+      void setTimeout(async () => {
         await emailService.sendReminderEmail(
           input.email,
           input.name,
           input.type,
-          new Date(input.startTime),
-          new Date(input.date)
+          startTime,
+          appointmentDate
         );
       }, reminderDate.getTime() - Date.now());
+
+      // Create the appointment record
+      const [newAppointment] = await ctx.db.insert(appointments).values({
+        patientName: input.name,
+        patientEmail: input.email,
+        appointmentType: input.type,
+        startTime,
+        endTime,
+        status: initialStatus,
+        date: appointmentDate,
+      }).returning();
+
+      return {
+        success: true,
+        appointment: newAppointment
+      };
+    } catch (error) {
+      console.error("Detailed appointment creation error:", error);
+      
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: error instanceof Error ? error.message : "Failed to create appointment",
+        cause: error,
+      });
     }
+  }),
 
-    console.log('Creating database record...');
-    
-    const [newAppointment] = await ctx.db.insert(appointments).values({
-      patientName: input.name,
-      patientEmail: input.email,
-      appointmentType: input.type,
-      startTime: new Date(input.startTime),
-      endTime: new Date(input.endTime),
-      date: new Date(input.date),
-      googleEventId,
-    }).returning();
+  approveAppointment: protectedProcedure
+  .input(z.object({
+    appointmentId: z.number()
+  }))
+  .mutation(async ({ ctx, input }) => {
+    try {
+      const appointment = await ctx.db.query.appointments.findFirst({
+        where: eq(appointments.id, input.appointmentId)
+      });
 
-    console.log('Database record created');
+      if (!appointment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Appointment not found"
+        });
+      }
 
-    return {
-      success: true,
-      appointment: newAppointment,
-      calendarEventId: googleEventId
-    };
-  } catch (error) {
-    console.error("Detailed appointment creation error:", error);
-    
-    if (error instanceof TRPCError) {
-      throw error;
+      // Ensure we have proper Date objects
+      const appointmentDate = new Date(appointment.date);
+      const startTime = new Date(appointment.startTime);
+      const endTime = new Date(appointment.endTime);
+
+      const emailService = new EmailService();
+      
+      await emailService.sendConfirmationEmail(
+        appointment.patientEmail,
+        appointment.patientName,
+        appointment.appointmentType,
+        startTime,
+        endTime,
+        appointmentDate
+      );
+
+      // Schedule reminder email with proper Date objects
+      const reminderDate = new Date(appointmentDate);
+      reminderDate.setDate(reminderDate.getDate() - 1);
+      
+      void setTimeout(async () => {
+        await emailService.sendReminderEmail(
+          appointment.patientEmail,
+          appointment.patientName,
+          appointment.appointmentType,
+          startTime,
+          appointmentDate
+        );
+      }, reminderDate.getTime() - Date.now());
+
+      await ctx.db.update(appointments)
+        .set({ status: "booked" })
+        .where(eq(appointments.id, input.appointmentId));
+
+      return { success: true };
+    } catch (error) {
+      console.error("Failed to approve appointment:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: error instanceof Error ? error.message : "Failed to approve appointment",
+        cause: error,
+      });
     }
+  }),
 
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: error instanceof Error ? error.message : "Failed to create appointment",
-      cause: error,
-    });
-  }
-}),
-getAvailableSlots: publicProcedure
-.input(z.object({
-  date: z.string()
-}))
-.query(async ({ ctx, input }) => {
-  const dayStart = new Date(input.date);
-  const dayEnd = new Date(input.date);
-  dayEnd.setHours(23, 59, 59);
+  getAvailableSlots: publicProcedure
+    .input(z.object({
+      date: z.string()
+    }))
+    .query(async ({ ctx, input }) => {
+      const dayStart = new Date(input.date);
+      const dayEnd = new Date(input.date);
+      dayEnd.setHours(23, 59, 59);
 
-  const existingAppointments = await ctx.db.query.appointments.findMany({
-    where: and(
-      gte(appointments.startTime, dayStart),
-      lte(appointments.endTime, dayEnd)
-    ),
-  });
+      const existingAppointments = await ctx.db.query.appointments.findMany({
+        where: and(
+          gte(appointments.startTime, dayStart),
+          lte(appointments.endTime, dayEnd)
+        ),
+      });
 
-  return existingAppointments;
-}),
+      return existingAppointments;
+    }),
+
+  getAllAppointments: protectedProcedure
+    .input(getAppointmentsSchema)
+    .query(async ({ ctx, input }) => {
+      try {
+        const conditions = [];
+        
+        if (input.status) {
+          conditions.push(eq(appointments.status, input.status));
+        }
+
+        if (input.search) {
+          conditions.push(
+            or(
+              like(appointments.patientName, `%${input.search}%`),
+              like(appointments.patientEmail, `%${input.search}%`),
+              like(appointments.appointmentType, `%${input.search}%`)
+            )
+          );
+        }
+
+        if (input.startDate && input.endDate) {
+          conditions.push(
+            and(
+              gte(appointments.date, input.startDate),
+              lte(appointments.date, input.endDate)
+            )
+          );
+        }
+
+        const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+        const appointmentsData = await ctx.db.query.appointments.findMany({
+          where: whereClause,
+          orderBy: [desc(appointments.date)],
+        });
+
+        return appointmentsData;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch appointments",
+          cause: error,
+        });
+      }
+    }),
+
+  updateAppointmentStatus: protectedProcedure
+    .input(updateAppointmentStatusSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const [updatedAppointment] = await ctx.db
+          .update(appointments)
+          .set({ status: input.status })
+          .where(eq(appointments.id, input.appointmentId))
+          .returning();
+
+        return updatedAppointment;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update appointment status",
+          cause: error,
+        });
+      }
+    }),
 
   deleteAppointment: protectedProcedure
     .input(z.object({

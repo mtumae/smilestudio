@@ -53,7 +53,7 @@ const AddAdminDialog = () => {
       toast({
         title: "Success",
         description: "Admin access has been granted successfully",
-        variant: "success",
+      
       });
     },
     onError: (error) => {

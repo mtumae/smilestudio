@@ -9,6 +9,7 @@ import {
 } from "react-icons/fi";
 import Image from "next/image";
 import SettingsPage from './Settings';
+import { AppointmentsPage } from './AppointmentsPage';
 
 type NavItem = {
   icon: React.ElementType;
@@ -31,7 +32,7 @@ const renderView = (view: ViewType) => {
     case 'dashboard':
       return <div>Dashboard View</div>;
     case 'appointments':
-      return <div>Appointments View</div>;
+      return <div> <AppointmentsPage/> </div>;
     case 'patients':
       return <div>Patients View</div>;
     case 'messages':

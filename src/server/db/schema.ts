@@ -136,6 +136,7 @@ export const appointments = createTable('appointments', {
   date: timestamp('date').notNull(),
   startTime: timestamp('start_time').notNull(),
   endTime: timestamp('end_time').notNull(),
+  status:varchar("status",{length:255}).notNull(),
   googleEventId: varchar('google_event_id', { length: 255 }),
 });
 
@@ -162,11 +163,13 @@ export const settings = createTable('settings', {
   isSet: boolean('isSet').default(true),
 });
 export const patients = createTable('patients', {
-  id: serial('id').primaryKey(),
+  id: varchar('customer_id', { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  count: integer("count"),
   createdAt: timestamp("created_at", { withTimezone: true })
-  .default(sql`CURRENT_TIMESTAMP`)
-  .notNull(),
-  
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 export const messageStatusEnum = pgEnum('message_status', ['unread', 'read', 'responded']);
 
