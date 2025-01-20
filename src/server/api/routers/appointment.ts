@@ -361,9 +361,8 @@ export const appointmentRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { appointmentId, status } = input;
   
-      // Begin transaction to handle both updates
       return await ctx.db.transaction(async (tx) => {
-        // Update appointment status
+      
         const [updatedAppointment] = await tx
           .update(appointments)
           .set({ status })
@@ -372,29 +371,29 @@ export const appointmentRouter = createTRPCRouter({
             patientEmail: appointments.patientEmail
           });
   
-        // If marked as done, update patient records
+     
         if (status === "done" && updatedAppointment) {
-          // Find the user by email
+         
           const [user] = await tx
             .select()
             .from(users)
             .where(eq(users.email, updatedAppointment.patientEmail));
   
           if (user) {
-            // Check if patient record exists
+            
             const [existingPatient] = await tx
               .select()
               .from(patients)
               .where(eq(patients.id, user.id));
   
             if (existingPatient) {
-              // Update existing patient count
+              
               await tx
                 .update(patients)
                 .set({ count: sql`${patients.count} + 1` })
                 .where(eq(patients.id, user.id));
             } else {
-              // Create new patient record
+              
               await tx
                 .insert(patients)
                 .values({
