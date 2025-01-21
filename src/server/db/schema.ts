@@ -159,6 +159,7 @@ export const revenues = createTable('revenues', {
 export const satisfactionRatings = createTable('satisfaction_ratings', {
   id: serial('id').primaryKey(),
   rating: integer('rating').notNull(),
+  feedback: text('feedback'),
   date: timestamp('date').notNull(),
 });
 export const settings = createTable('settings', {

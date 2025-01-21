@@ -7,13 +7,13 @@ interface SortOption {
   label: string
 }
 
-interface SortSelectProps {
-  options: SortOption[]
-  value: string
-  onValueChange: (value: string) => void
+interface SortSelectProps<T extends string> {
+  options: readonly { value: T; label: string }[];
+  value: T;
+  onValueChange: (value: T) => void;
 }
 
-export function SortSelect({ options, value, onValueChange }: SortSelectProps) {
+export function SortSelect<T extends string>({ options, value, onValueChange }: SortSelectProps<T>) {
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-[180px]">

@@ -362,38 +362,34 @@ export const appointmentRouter = createTRPCRouter({
       const { appointmentId, status } = input;
   
       return await ctx.db.transaction(async (tx) => {
-      
         const [updatedAppointment] = await tx
           .update(appointments)
           .set({ status })
           .where(eq(appointments.id, appointmentId))
           .returning({
-            patientEmail: appointments.patientEmail
+            patientEmail: appointments.patientEmail,
+            patientName: appointments.patientName
           });
   
-     
         if (status === "done" && updatedAppointment) {
-         
+          // Handle patient stats update
           const [user] = await tx
             .select()
             .from(users)
             .where(eq(users.email, updatedAppointment.patientEmail));
   
           if (user) {
-            
             const [existingPatient] = await tx
               .select()
               .from(patients)
               .where(eq(patients.id, user.id));
   
             if (existingPatient) {
-              
               await tx
                 .update(patients)
                 .set({ count: sql`${patients.count} + 1` })
                 .where(eq(patients.id, user.id));
             } else {
-              
               await tx
                 .insert(patients)
                 .values({
@@ -401,6 +397,16 @@ export const appointmentRouter = createTRPCRouter({
                   count: 1
                 });
             }
+  
+           
+            const emailService = new EmailService();
+            const reviewLink = `${process.env.NEXTAUTH_URL}/review/${appointmentId}`;
+            
+            await emailService.sendReviewRequestEmail(
+              updatedAppointment.patientEmail,
+              updatedAppointment.patientName,
+              reviewLink
+            );
           }
         }
   

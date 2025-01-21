@@ -153,6 +153,63 @@ export class EmailService {
     })
   }
 
+async sendReviewRequestEmail(
+  userEmail: string,
+  userName: string,
+  reviewLink: string
+) {
+  await this.client.sendEmail({
+    From: "appointments@mysonder.tech",
+    To: userEmail,
+    Subject: "How was your experience? Leave a review",
+    TextBody: `
+      Dear ${userName},
+
+      Thank you for choosing our services. We'd love to hear about your experience!
+      
+      Please take a moment to leave a review by clicking the link below:
+      ${reviewLink}
+
+      Your feedback helps us improve our services.
+
+      Best regards,
+      Smile Studio Team
+    `,
+    HtmlBody: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Leave a Review</title>
+        </head>
+        <body style="background-color: #f6f9fc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            <div style="background: white; border-radius: 8px; padding: 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <h1 style="color: #4F46E5; text-align: center;">How was your experience?</h1>
+              
+              <p style="color: #475569;">Dear ${userName},</p>
+              
+              <p style="color: #475569;">Thank you for choosing our services. We'd love to hear about your experience!</p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${reviewLink}" 
+                   style="background-color: #4F46E5; color: white; padding: 12px 24px; 
+                          border-radius: 4px; text-decoration: none; display: inline-block;">
+                  Leave a Review
+                </a>
+              </div>
+              
+              <p style="color: #64748B; text-align: center; font-size: 14px;">
+                Your feedback helps us improve our services.
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  });
+}
+
   async sendReminderEmail(
     patientEmail: string,
     patientName: string,
