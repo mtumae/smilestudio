@@ -56,8 +56,9 @@ export default function Profile(){
             {session &&(
                 <>
                 <CardHeader className="items-center">
-                            <CardTitle className="text-xl font-montserrat">{(x > 12 || x < 15) ? "Good Afternoon 🏙️" : (x == 24 || x < 12) ? "Good Morning🌅" : "Good Evening 🌃"}</CardTitle>
+                            <CardTitle className="text-xl font-montserrat">{(x > 12 && x < 17) ? "Good Afternoon 🏙️" : (x == 24 && x < 12) ? "Good Morning🌅" : "Good Evening 🌃"}</CardTitle>
                             <CardDescription>{session.user.email}</CardDescription>
+                         
                             <User className="w-32 h-32 hover:bg-othergray p-4 rounded-lg" />
                 </CardHeader>
                 <CardContent >
@@ -77,9 +78,6 @@ export default function Profile(){
                             How have you been feeling as of late?
                         </div>
                     </div>
-
-                    
-
                 </CardContent>
                 </>
             )}
