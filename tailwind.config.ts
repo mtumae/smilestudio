@@ -85,13 +85,14 @@ export default {
   	},
   	colors: {
   		ssblue: '#57fff0',
-      ssblack: '#000000',
-      ssgray: '#939696',
-	  othergray: '#e0e0e0',
-	  darkgray: '#696565',
-      white: '#ffffff',
-      red: '#eb2a2a',
-	  mutedblu: '#8cbfb8'
+      	ssblack: '#000000',
+      	ssgray: '#939696',
+	  	othergray: '#e0e0e0',
+	  	darkgray: '#696565',
+      	white: '#ffffff',
+      	red: '#eb2a2a',
+	  	mutedblu: '#8cbfb8',
+	  	ssgreen: '#42f5a1'
   	}
   },
   plugins: [

@@ -8,6 +8,35 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Footer from "../footer/page";
 import { Button } from "~/components/ui/button";
 
+const SATISFACTION_TYPES = [
+    { 
+        id:"1",
+        type:"extremely angry",
+        placeholder:"😠"
+    },
+    { 
+        id:"2",
+        type:"sad",
+        placeholder:"☹️"
+    },
+    { 
+        id:"3",
+        type:"indifferent",
+        placeholder:"😐"
+    },
+    { 
+        id:"4",
+        type:"happy",
+        placeholder:"😊"
+    },
+    { 
+        id:"5",
+        type:"extremely happy",
+        placeholder:"😁"
+    }
+]
+
+
 
 
 export default function Profile(){
@@ -34,9 +63,21 @@ export default function Profile(){
                 <CardContent >
                     
                     {session.user.name}
-                    <div className="grid grid-cols-1 w-full items-center">
-                        Client
+                    <div className="grid grid-cols-1 w-full  justify-items-center gap-4">
+                        <div>
+                            Client
+                        </div>
+                        <div>
+                        {SATISFACTION_TYPES.map((feeling) => (
+                            <a className="bg-transparet hover:bg-othergray p-2 rounded-lg cursor-pointer w-10 h-10" key={feeling.id}>{feeling.placeholder}</a>
+                        ))}
+                        </div>
+
+                        <div className="text-darkgray text-sm">
+                            How have you been feeling as of late?
+                        </div>
                     </div>
+
                     
 
                 </CardContent>
