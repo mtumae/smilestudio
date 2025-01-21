@@ -31,26 +31,23 @@ export default function Blog(){
                     <TabsTrigger value="edit">Edit post</TabsTrigger>
                 </TabsList>
                 <TabsContent value="create" className="grid grid-cols-1 w-full">
-                
-                        <Label className="w-full">Main Title</Label>
+                    <div className="grid grid-cols-1 m-10 gap-3">
+                        <Label className="w-full text-xl">Main Title</Label>
                         <Input className="mt-2 mb-2" name="title" placeholder="Enter Title..."></Input>
-                
-                  
-                        <Label className="w-full mb-1">Sub Title</Label>
-                        <Input className="mt-2 mb-2" name="sub-title"  placeholder="Enter Title..."></Input>
-                 
-                        <Label className="w-full mb-1">Body</Label>
-                        <Input className="h-60 mt-2 mb-2" placeholder="Enter Body..." ></Input>
-                  
+                        <Label className="w-full mb-1 text-xl">Sub Title</Label>
+                        <Input className="mt-2 mb-2" name="sub-title"  placeholder="Enter sub-title..."></Input>
+                        <Label className="w-full mb-1 text-xl">Body</Label>
+                        <Input type="text" className="h-60 mt-2 mb-2" placeholder="Enter Body..." ></Input>
                         <Button className="w-1/3 bg-ssblue justify-self-end">Post</Button>
+                        </div>
                 </TabsContent>
                 <TabsContent value="edit">
                     <div className="grid grid-cols-1 m-10 gap-3">
                             {posts.data?.map(( post ) =>
-                            <div className="">
+                         
                                 <Card key={post.id}>
                                     <CardHeader>
-                                        <CardTitle>{post.id}.{post.title}</CardTitle>
+                                        <CardTitle>{post.title}</CardTitle>
                                         <h1 className="text-sm text-darkgray">{post.createdAt.toString()};</h1>
                                     </CardHeader>
                                     <CardContent>
@@ -58,10 +55,10 @@ export default function Blog(){
                                     </CardContent>
                                     <CardFooter>
                                     <Button className="bg-ssblack text-ssblue mr-3">Edit<Edit/></Button> 
-                                    <Button variant={"destructive"} >Delete<Delete /></Button>
+                                    <Button variant="destructive" >Delete<Delete /></Button>
                                     </CardFooter>
                                 </Card>
-                            </div>
+                         
                             )}
                     </div>
                 </TabsContent>
