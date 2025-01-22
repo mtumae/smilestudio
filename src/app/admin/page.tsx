@@ -14,6 +14,7 @@ import {PatientsPage} from './PatientPage';
 
 
 import Blog from './news';
+import {  DentalAnalyticsDashboard } from './Dashboard';
 
 type NavItem = {
   icon: React.ElementType;
@@ -35,7 +36,7 @@ const navItems: NavItem[] = [
 const renderView = (view: ViewType) => {
   switch (view) {
     case 'dashboard':
-      return <div>Dashboard View</div>;
+      return <div><DentalAnalyticsDashboard/></div>;
     case 'appointments':
       return <div> <AppointmentsPage/> </div>;
     case 'patients':

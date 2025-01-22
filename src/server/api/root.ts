@@ -2,7 +2,7 @@ import { postRouter } from "~/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { appointmentRouter } from "./routers/appointment";
-import { dashboardRouter } from "./routers/admin";
+import { analyticsRouter } from "./routers/analytics";
 import { settings } from "../db/schema";
 import { settingsRouter } from "./routers/settings";
 import { businessMessageRouter } from "./routers/messaging";
@@ -17,10 +17,11 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   user: userRouter,
   appointment: appointmentRouter,
-  admin: dashboardRouter,
+  
   settings: settingsRouter,
   messages: businessMessageRouter,
-  patient: patientRouter
+  patient: patientRouter,
+  analytics:analyticsRouter
 });
 
 // export type definition of API
