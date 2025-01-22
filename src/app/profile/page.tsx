@@ -8,6 +8,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Footer from "../footer/page";
 import { Button } from "~/components/ui/button";
 
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "~/components/ui/table"
+
 const SATISFACTION_TYPES = [
     { 
         id:"1",
@@ -51,7 +61,7 @@ export default function Profile(){
         <div>
 
             <NavBar></NavBar>
-            <div className="grid grid-cols-1 m-10 w-1/2 justify-self-center">
+            <div className="grid grid-cols-1 m-10 w-1/2 justify-self-center gap-4">
             <Card className="justify-items-center">
             {session &&(
                 <>
@@ -83,7 +93,38 @@ export default function Profile(){
             )}
             <CardFooter>
             <Button variant="destructive">Log out</Button>
+            <Button variant="link">Book appointment</Button>
             </CardFooter>
+            </Card>
+
+            <Card className="mt-10">
+                <CardHeader>
+                    <CardTitle>Recent appointments</CardTitle>
+                </CardHeader>
+                <CardContent>
+                <Table>
+                    <TableCaption>A list of your recent appointments.</TableCaption>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead className="w-[100px]">Type</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Start</TableHead>
+                        <TableHead >End</TableHead>
+                        <TableHead className="text-right">Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                        <TableCell className="font-medium">Root canal</TableCell>
+                        <TableCell>22/01/2025</TableCell>
+                        <TableCell>15:00</TableCell>
+                        <TableCell>16:30</TableCell>
+                        <TableCell className="text-right">Done</TableCell>
+                        </TableRow>
+
+                    </TableBody>
+                    </Table>
+                </CardContent>
             </Card>
             </div>
             <Footer></Footer>
