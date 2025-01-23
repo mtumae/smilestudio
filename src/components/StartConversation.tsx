@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import { Input } from "~/components/ui/input"
 import { Textarea } from "~/components/ui/textarea"
 
-export function StartConversationDialog() {
+export function StartConversationDialog({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
  
@@ -38,6 +38,7 @@ export function StartConversationDialog() {
         description: "Our team will respond to your message shortly!",
       })
       router.push(`/chat/${result.id}`)
+      onOpenChange?.(false)
     } catch (error) {
       toast({
         title: "Error",
@@ -48,7 +49,7 @@ export function StartConversationDialog() {
   }
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button 
           variant="outline" 

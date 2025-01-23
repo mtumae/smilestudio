@@ -8,11 +8,12 @@ import { LogOut, Settings, User, User2 } from "lucide-react";
 
 const navLinks = [
     {name:"Home", href:"/"},
-    //{name:"Admin", href:"/admin"},
+    {name:"Contact", href:"/contact"},
     {name:"News", href:"/news"},
     {name:"Services", href:"/services"},
     {name:"Book", href:"/book"},
     {name:"Login", href:"/api/auth/signup"},
+    
   ]
   
 
