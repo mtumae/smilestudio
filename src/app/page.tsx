@@ -32,6 +32,7 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "~/components/ui/card";
 import Footer from "./footer/page";
 import NavBar from "~/components/ui/navigation";
+import { FiFacebook, FiInstagram } from "react-icons/fi";
 
 const navLinks = [
   {name:"Home", href:"/"},
@@ -57,7 +58,7 @@ export default function Home(){
     padding: '20px',
     margin: '20px'
   };
-
+  
 
   const Img2Style={
     backgroundImage: 'url(/chairblur.jpeg)', 
@@ -66,6 +67,9 @@ export default function Home(){
   const Img3Style={
     backgroundImage: 'url(/chair2blur.jpg)', 
   }
+
+  
+
 
   return(
     <div className="overflow-x-hidden">
@@ -93,15 +97,21 @@ export default function Home(){
           <CardContent>
           <Breadcrumb>
             <BreadcrumbList className="text-ssblack">
+
               <BreadcrumbItem>
-              <Facebook></Facebook>
+              <Link href="https://www.facebook.com/smilestudioyayacentre/" target="_blank" >
+              <FiFacebook className="w-8 h-8 cursor-pointer"></FiFacebook>
+              </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
               <Slash />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-              <Instagram></Instagram>
+              <Link href="https://www.instagram.com/smilestudio_ke/" target="_blank">
+              <FiInstagram className="w-8 h-8 cursor-pointer"  ></FiInstagram>
+              </Link>
               </BreadcrumbItem>
+          
               <BreadcrumbSeparator >
               <Slash />
               </BreadcrumbSeparator>

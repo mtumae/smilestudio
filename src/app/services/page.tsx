@@ -54,27 +54,35 @@ const Img1Style={
   }
 
 const Img2Style={
-    backgroundImage: 'url(/mirror.jpg)', 
+    backgroundImage: 'url(/gradblu3.png)', 
+    backgroundSize: 'cover', 
+    borderRadius: '20px',
+    padding: '20px'
 }
   const Img3Style={
-    backgroundImage: 'url(/chairblur.jpeg)',
-   
+    backgroundImage: 'url(/gradblu2.png)',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    borderRadius: '20px',
+    padding: '20px'
   }
 
   const Img4Style={
-    backgroundImage: 'url(/chair2blur.jpg)',
-
+    backgroundImage: 'url(/gradblu.png)',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    padding: '40px',
+    borderRadius: '20px',
   }
+
+
 
 export default function Services(){
     return(
-        <div  className="overflow-x-hidden">
+        <div className="overflow-x-hidden">
             <NavBar></NavBar>
-         
-            <div  className="grid grid-auto-fit gap-4 m-10 mt-20 ">
-
-
-            <h1 className="text-5xl font-montserrat m-10 mt-20 w-1/2 text-ssgray">
+            <div style={Img4Style} className="grid grid-auto-fit gap-4 m-10 mt-20 ">
+            <h1 className="text-5xl font-montserrat ml-3 mt-20 w-1/2 text-ssgray">
               Routine Dentistry
             </h1>
 
@@ -151,14 +159,107 @@ export default function Services(){
 
               </CardContent>
             </Card>
+            </div>
+            <div style={Img3Style} className="grid grid-auto-fit gap-8 m-10 mt-20 ">
+                <Card className=" w-auto hover:border-ssblue col-span-3">
+                  <CardContent className="p-10">
+                  Dentistry advocates for the principle of prevention. It is recommended to have biannual 
+                  cleanings and examinations. 
+                  At Smile Studio the average hygiene visit lasts about one hour, 
+                  this enables our doctors check your gum health, the condition of your teeth and fillings, 
+                  do a thorough cleaning and polishing and offer individualised preventive advice to help you
+                  stay healthy.
+                  </CardContent>
+                </Card>
+
+
+            <h1 className="text-5xl font-montserrat ml-3 mt-8 w-1/2 text-ssgray">
+              General Cleaning
+            </h1>
+
+            <h1 className="text-5xl font-montserrat ml-3 mt-8 w-1/2 text-ssgray">
+              Paediatric Dentistry
+            </h1>
+
+            <Card className=" w-auto hover:border-ssblue col-span-3">
+              <CardContent className="p-10">
+              It is never too early to bring your kids in for a dental check up.
+               As soon as the first teeth appear in the mouth at about 6 months the dental journey begins. 
+               Unfortunately most people's first dental visits were a result of pain, which, 
+              combined with anxiety leads to a negative mindset towards dentistry in general.
+              A good first dental experience can encourage a lifelong positive attitude toward oral care and dentistry.
+              
+              </CardContent>
+            </Card>
+            </div>
+
+            <div style={Img2Style} className="grid grid-auto-fit gap-8 m-10 mt-20 ">
+            <h1 className="text-5xl font-montserrat ml-3 mt-8 w-1/2 text-ssgray">
+              Cosmetic
+            </h1>
+
+            <Card className=" w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg">
+              Veneers
+              </CardHeader>
+              <CardContent>
+              If you’re looking to cosmetically correct or enhance the appearance of
+               one or more teeth, we suggest veneers. They are very thin, porcelain 
+               or resin shells that you can customize in color and shape. 
+              They are non-invasive and are resistant to future stains.
+              </CardContent>
+            </Card>
+
+            <Card className=" w-auto hover:border-ssblue ">
+              <CardHeader className="font-montserrat text-lg">
+              Whitening
+              </CardHeader>
+              <CardContent>
+              Professional teeth whitening is faster, more effective, 
+              and longer lasting that treatments you find over the counter. 
+              We can brighten your teeth by
+              five to ten shades in a single session. 
+              </CardContent>
+            </Card>
+
+            <Card className=" w-auto hover:border-ssblue">
+              <CardHeader className="font-montserrat text-lg">
+              Whitening
+              </CardHeader>
+              <CardContent>
+              Professional teeth whitening is faster, more effective, 
+              and longer lasting that treatments you find over the counter. 
+              We can brighten your teeth by
+              five to ten shades in a single session. 
+              </CardContent>
+            </Card>
+
+           
+
+            <Card className=" w-auto hover:border-ssblue m-10 col-span-2">
+              <CardHeader className="font-montserrat text-lg">
+              What is orthodontics?
+              </CardHeader>
+              <CardContent>
+              Orthodontic treatment is used to improve the appearance, position 
+              and function of crooked, crowded, protruding or abnormally arranged teeth. 
+              Orthodontic treatment can also be used to close gaps between the teeth.
+              
+              </CardContent>
+            </Card>
 
             
 
 
-  
+            <h1 className="text-5xl font-montserrat m-10 mt-8 w-1/2 text-ssgray">
+              Orthodontics
+            </h1>
 
 
 
+
+
+            
             </div>
             <Footer></Footer>
         </div>
