@@ -90,9 +90,10 @@ export default function News(){
                   <CarouselNext />
                 </Carousel>
                   </div> 
+                  <Footer></Footer>
             </div>
 
-            <Footer></Footer>
+            
         </div>
     )
 }

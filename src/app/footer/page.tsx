@@ -1,7 +1,7 @@
 export default function Footer(){
     return (
         <footer>
-        <div className="bg-ssblack grid grid-auto-fit mt-28 w-full">
+        <div className="bg-ssblack grid grid-auto-fit  w-full">
               <div className="m-10">
                 <a className="text-ssgray">Office hours</a>
                   <ul className="text-white">

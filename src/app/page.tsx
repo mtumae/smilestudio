@@ -127,9 +127,11 @@ export default function Home(){
                 and the role they have played and continue to play in restorative dental health.
                 With over 95% success rates, dental implants are an excellent tooth replacement solution.
                 </CardContent>
+                <Link href="/news">
                 <CardFooter className="text-ssblue hover:text-white cursor-pointer">
                   read more <MoveRight className="ml-4 mt-1"/>
                 </CardFooter>
+                </Link>
               </Card> 
 
               <Card style={Img3Style} className="p-5">
@@ -143,9 +145,11 @@ export default function Home(){
                 so many don’t often notice that they have it until it’s too late. 
                 What are the signs of gum disease?
                 </CardContent>
-                <CardFooter className="text-ssblue hover:text-white cursor-pointer">
+                <Link href="/news">
+                <CardFooter className="text-ssblue hover:text-white cursor-pointer" >
                   read more <MoveRight className="ml-4 mt-1"/>
                 </CardFooter>
+                </Link>
               </Card>          
         </div>
       <Footer></Footer>
