@@ -61,7 +61,7 @@ export default function Profile(){
     return(
         <div>
             <NavBar></NavBar>
-            <div className="grid grid-cols-1 m-10 w-1/2 justify-self-center gap-4">
+            <div className="grid grid-auto-fit gap-3 m-10">
             <Card className="justify-items-center">
             {session &&(
                 <>
@@ -93,13 +93,13 @@ export default function Profile(){
             </CardFooter>
             </Card>
 
-            <Card className="mt-10">
+            <Card className="">
                 <CardHeader>
                     <CardTitle>Recent appointments</CardTitle>
                 </CardHeader>
                 <CardContent>
                 <Table>
-                    <TableCaption>A list of your recent appointments.</TableCaption>
+                    <TableCaption className="text-sm">A list of your recent appointments.</TableCaption>
                     <TableHeader>
                     <TableRow>
                         <TableHead className="text-left">Type</TableHead>
