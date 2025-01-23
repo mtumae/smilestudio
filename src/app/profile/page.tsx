@@ -103,16 +103,16 @@ export default function Profile(){
                     <TableHeader>
                     <TableRow>
                         <TableHead className="text-left">Type</TableHead>
-                        <TableHead className="text-center">Date</TableHead>
+                        <TableHead className="">Date</TableHead>
                         <TableHead className="text-right">Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody className="m-10">
                     {user_appointments.data?.map((aps) =>
                         <TableRow key={aps.id}>
-                        <TableCell className="font-medium">{aps.appointmentType}</TableCell>
-                        <TableCell>{aps.date.toString().split("", 15)}</TableCell>
-                        <TableCell className={(aps.status=="done")? "text-ssgreen font-montserrat":""}>{aps.status}</TableCell>
+                        <TableCell className="font-medium text-left">{aps.appointmentType}</TableCell>
+                        <TableCell className="">{aps.date.toString().split("", 15)}</TableCell>
+                        <TableCell className={(aps.status=="done")? "text-ssgreen font-montserrat text-right":""}>{aps.status}</TableCell>
                         </TableRow>)
                     }
                     </TableBody>
