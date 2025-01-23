@@ -32,6 +32,7 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "~/components/ui/card";
 import Footer from "./footer/page";
 import NavBar from "~/components/ui/navigation";
+import { FiFacebook, FiInstagram } from "react-icons/fi";
 
 const navLinks = [
   {name:"Home", href:"/"},
@@ -57,7 +58,7 @@ export default function Home(){
     padding: '20px',
     margin: '20px'
   };
-
+  
 
   const Img2Style={
     backgroundImage: 'url(/chairblur.jpeg)', 
@@ -66,6 +67,9 @@ export default function Home(){
   const Img3Style={
     backgroundImage: 'url(/chair2blur.jpg)', 
   }
+
+  
+
 
   return(
     <div className="overflow-x-hidden">
@@ -93,15 +97,21 @@ export default function Home(){
           <CardContent>
           <Breadcrumb>
             <BreadcrumbList className="text-ssblack">
+
               <BreadcrumbItem>
-              <Facebook></Facebook>
+              <Link href="https://www.facebook.com/smilestudioyayacentre/" target="_blank" >
+              <FiFacebook className="w-8 h-8 cursor-pointer"></FiFacebook>
+              </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
               <Slash />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-              <Instagram></Instagram>
+              <Link href="https://www.instagram.com/smilestudio_ke/" target="_blank">
+              <FiInstagram className="w-8 h-8 cursor-pointer"  ></FiInstagram>
+              </Link>
               </BreadcrumbItem>
+          
               <BreadcrumbSeparator >
               <Slash />
               </BreadcrumbSeparator>
@@ -127,9 +137,11 @@ export default function Home(){
                 and the role they have played and continue to play in restorative dental health.
                 With over 95% success rates, dental implants are an excellent tooth replacement solution.
                 </CardContent>
+                <Link href="/news">
                 <CardFooter className="text-ssblue hover:text-white cursor-pointer">
                   read more <MoveRight className="ml-4 mt-1"/>
                 </CardFooter>
+                </Link>
               </Card> 
 
               <Card style={Img3Style} className="p-5">
@@ -143,9 +155,11 @@ export default function Home(){
                 so many don’t often notice that they have it until it’s too late. 
                 What are the signs of gum disease?
                 </CardContent>
-                <CardFooter className="text-ssblue hover:text-white cursor-pointer">
+                <Link href="/news">
+                <CardFooter className="text-ssblue hover:text-white cursor-pointer" >
                   read more <MoveRight className="ml-4 mt-1"/>
                 </CardFooter>
+                </Link>
               </Card>          
         </div>
       <Footer></Footer>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { LogOut, Settings, User2 } from "lucide-react";
+import { LogOut, Settings, User, User2 } from "lucide-react";
 
 const navLinks = [
     {name:"Home", href:"/"},
@@ -25,7 +25,7 @@ const navLinks = [
     );
  
     return (
-        <div className="overflow-hidden pt-10">
+        <div className="overflow-hidden">
             <div className="relative self-end">
                 <div className="flex justify-between items-center">
                     <Image
@@ -41,8 +41,10 @@ const navLinks = [
                                 <DropdownMenuTrigger className="flex items-center">
                                     <Avatar className="border-2 border-ssblue">
                                         <AvatarImage src={session.user.email ?? "https://github.com/shadcn.png"} />
-                                        <AvatarFallback>{session.user.email?.charAt(0)}</AvatarFallback>
+                                        <AvatarFallback><User /></AvatarFallback>
+
                                     </Avatar>
+                                    
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
                                 
@@ -53,13 +55,7 @@ const navLinks = [
                                         <User2 size={16} className="mr-2" />
                                         Profile
                                     </DropdownMenuItem>
-                                    </Link>
-                                    <Link href='/settings'>
-                                    <DropdownMenuItem>                              
-                                        <Settings size={16} className="mr-2" />
-                                        Settings
-                                    </DropdownMenuItem>
-                                    </Link>      
+                                    </Link>     
                                     <DropdownMenuItem className="text-red" onClick={() => signOut()}>
                                         <LogOut size={16} className="mr-2" />
                                         Logout

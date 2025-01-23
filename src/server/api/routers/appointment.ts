@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { appointments, accounts, settings, patients, users } from "~/server/db/schema";
 import { GoogleCalendarService } from "~/lib/calender";
-import { eq, and, gte, lte, desc, or, like, SQL, sql } from "drizzle-orm";
+import { eq, and, gte, lte, desc, or, like, SQL, sql, isNull } from "drizzle-orm";
 import { EmailService } from "~/lib/email";  
 import {
   startOfDay,
@@ -306,6 +306,16 @@ export const appointmentRouter = createTRPCRouter({
       });
 
       return existingAppointments;
+    }),
+
+  getUserAppointments: protectedProcedure
+    .query(async ({ctx, input}) => {
+      const data = await ctx.db.query.appointments.findMany({  
+        where:
+          eq(appointments.patientEmail, ctx.session.user.email!)
+      })
+
+      return data
     }),
 
   getAllAppointments: protectedProcedure
