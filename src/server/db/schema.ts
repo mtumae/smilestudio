@@ -11,7 +11,8 @@ import {
   timestamp,
   varchar,
   boolean,
-  pgEnum
+  pgEnum,
+  pgTable
 } from "drizzle-orm/pg-core";
 
 import { type AdapterAccount } from "next-auth/adapters";
@@ -177,49 +178,56 @@ export const patients = createTable('patients', {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
-export const messageStatusEnum = pgEnum('message_status', ['unread', 'read', 'responded']);
-
-export const messages = createTable('messages', {
+export const conversations = pgTable('conversations', {
   id: serial('id').primaryKey(),
-  customerId: varchar('customer_id', { length: 255 })
-    .notNull()
-    .references(() => users.id),
+  subject: text('subject'),
+  type: text('type').default('support').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const conversationParticipants = pgTable('conversation_participants', {
+  id: serial('id').primaryKey(),
+  conversationId: integer('conversation_id').references(() => conversations.id).notNull(),
+  userId: text('user_id').references(() => users.id).notNull(),
+  role: text('role').default('patient').notNull(),
+  lastRead: timestamp('last_read').defaultNow().notNull(),
+});
+
+export const messages = pgTable('messages', {
+  id: serial('id').primaryKey(),
+  conversationId: integer('conversation_id').references(() => conversations.id).notNull(),
+  senderId: text('sender_id').references(() => users.id).notNull(),
   content: text('content').notNull(),
-  createdAt: timestamp('created_at')
-    .defaultNow()
-    .notNull(),
-  status: messageStatusEnum('status').notNull().default('unread'),
-  respondedBy: varchar('responded_by', { length: 255 })
-    .references(() => users.id),
-  responseContent: text('response_content'),
-  isStarred: boolean('is_starred').default(false),
-  responseTime: timestamp('response_time'),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  status: text('status').notNull().default('sent'),
 });
 
-export const typingIndicators = createTable('typing_indicators', {
-  id: serial('id').primaryKey(),
-  userId: varchar('user_id', { length: 255 })
-    .notNull()
-    .references(() => users.id),
-  conversationId: varchar('conversation_id', { length: 255 })
-    .notNull(),
-  createdAt: timestamp('created_at')
-    .defaultNow()
-    .notNull(),
-});
+
+export const conversationParticipantsRelations = relations(conversationParticipants, ({ one }) => ({
+  conversation: one(conversations, {
+    fields: [conversationParticipants.conversationId],
+    references: [conversations.id],
+  }),
+  user: one(users, {
+    fields: [conversationParticipants.userId],
+    references: [users.id],
+  }),
+}));
+
 
 export const messagesRelations = relations(messages, ({ one }) => ({
-  customer: one(users, {
-    fields: [messages.customerId],
+  conversation: one(conversations, {
+    fields: [messages.conversationId],
+    references: [conversations.id],
+  }),
+  sender: one(users, {
+    fields: [messages.senderId],
     references: [users.id],
   }),
-  responder: one(users, {
-    fields: [messages.respondedBy],
-    references: [users.id],
-  }),
+
+
+  
 }));
 export const resetLink = createTable("reset_link", {
   identifier: text("identifier").notNull(),

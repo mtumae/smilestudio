@@ -15,6 +15,7 @@ import {PatientsPage} from './PatientPage';
 
 import Blog from './news';
 import {  DentalAnalyticsDashboard } from './Dashboard';
+import ChatPage from '../chat/page';
 
 type NavItem = {
   icon: React.ElementType;
@@ -42,7 +43,7 @@ const renderView = (view: ViewType) => {
     case 'patients':
       return <div><PatientsPage/></div>;
     case 'messages':
-      return <div>Messages View</div>;
+      return <div><ChatPage/></div>;
     case 'settings':
       return <div> <SettingsPage/></div>;
     case 'blog':
