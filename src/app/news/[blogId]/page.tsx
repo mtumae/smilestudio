@@ -1,4 +1,5 @@
 'use client'
+import { Skeleton } from "~/components/ui/skeleton"
 
 import { use } from "react";
 import { api } from "~/trpc/react";
@@ -10,6 +11,8 @@ import {
    CardHeader,
    CardTitle,
 } from "~/components/ui/card"
+import NavBar from "~/components/ui/navigation";
+import Footer from "~/app/footer/page";
 
 export default function BlogDetails({ 
    params 
@@ -26,14 +29,38 @@ export default function BlogDetails({
        return <div>Error: Blog ID is missing</div>;
    }
 
-   if (postByID.isLoading) return <div>Loading...</div>;
+   if (postByID.isLoading) return (  
+    <div>
+        <NavBar></NavBar>
+        <div className="flex flex-col space-y-3 m-20">
+        <div className="space-y-2">
+        <Skeleton className="h-96 w-full" />
+    </div>
+  </div>
+  </div>);
+
+
+
    if (postByID.error) return <div>Error: {postByID.error.message}</div>;
 
    return (
        <div>
+        <NavBar></NavBar>
            <h1>News post {blogId}</h1>
-           {postByID.data?.title}
-           {postByID.data?.subtitle}
+
+
+           <Card className="border-none shadow-none ">
+            <CardHeader className="justify-self-center mb-10 items-center">
+                <h1 className="text-2xl">{postByID.data?.title}</h1>
+                <h1 className="text-ssgray">Smile Studio </h1>
+                <h1 className="text-ssgray">{ postByID.data?.createdAt.toString().slice(0, 15) } </h1>
+           </CardHeader>
+           <CardContent className="m-10">
+                {postByID.data?.body}
+           </CardContent>
+           </Card>
+
+           <Footer></Footer>
        </div>
    );
 }
