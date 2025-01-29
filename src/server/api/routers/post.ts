@@ -1,5 +1,6 @@
+import { eq } from "drizzle-orm";
 import { z } from "zod";
-
+import { TRPCError } from "@trpc/server";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -32,6 +33,18 @@ export const postRouter = createTRPCRouter({
 
     return post ?? null;
   }),
+
+  getByID: protectedProcedure
+    .input(z.object({ postid: z.string() }))
+    .query(async ({ctx, input}) => {
+         
+          const data = await ctx.db.query.posts.findFirst({ 
+            where:
+              eq(posts.id, parseInt(input.postid))
+          })
+            return data ?? null
+          }),
+      
 
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";

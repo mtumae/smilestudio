@@ -84,6 +84,7 @@ export default function ContactPage() {
                 border border-gray-100
                 shadow-lg ${method.shadowColor}
                 hover:shadow-xl
+                cursor-pointer
               `}
               onClick={method.action}
             >

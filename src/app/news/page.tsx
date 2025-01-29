@@ -9,7 +9,7 @@ import { MoveRight } from "lucide-react"
 import { type CarouselApi } from "~/components/ui/carousel"
 import React from "react"
 import { api } from "~/trpc/react"
-
+import Image from "next/image"
 import {
     Card,
     CardContent,
@@ -26,6 +26,7 @@ import {
     CarouselNext,
     CarouselPrevious,
   } from "~/components/ui/carousel"
+import Link from "next/link"
   
 
 
@@ -49,12 +50,7 @@ import {
 
 
   const Img2Style ={
-    backgroundImage: 'url(/signblur.jpg)',
-    backgroundSize: 'cover', 
-    backgroundPosition: 'center',  
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'left',
+    backgroundImage: 'url(/eg1.jpg)',
     padding: '20px',
   }
 
@@ -64,36 +60,54 @@ export default function News(){
     return(
         <div>
             <NavBar></NavBar>
-            <div className="">
-                <div className="mt-7" style={Img1Style}>
-                <Carousel className="w-3/4">
-                  <CarouselContent>
-
+            <div className="grid grid-auto-fit gap-4 ">
                   { posts.data?.map(( post ) =>
-                    <CarouselItem key={post.id}>
-                      <Card className="bg-transparent border-none shadow-lg text-white">
-                        <CardHeader>
-                          <CardTitle className="font-montserrat">{post.title}</CardTitle>
-                          <CardDescription>Smile Studio Kenya</CardDescription>
-                        </CardHeader>
-                        <CardContent className="font-helvetica">
-                          {post.body}
-                        </CardContent>
-                        <CardFooter>
-                          {post.updatedAt?.toLocaleString()}
-                        </CardFooter>
-                      </Card>
-                    </CarouselItem>
-                    )}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-                  </div> 
-                  <Footer></Footer>
-            </div>
 
-            
+
+                  <div className="m-10 border-ssblack border-y-darkgray border-b-2" key={post.id}>
+                    <Card style={Img1Style} className="rounded-sm"></Card>
+                    <div className="bg-white w-full">
+                    <h1 className="bg-white ">{post.title}</h1>
+                    <h1 className="text-sm text-ssgray">{post.name}</h1>
+
+                    <Link href={`/news/${post.id}`}>
+                    {post.body?.slice(0, 100)}. . . 
+                    
+                      <div className="flex flex-row pb-2">
+                        read more<MoveRight className=""/></div>
+                    </Link>
+                    </div>
+                    </div>
+                  )}
+
+                  </div>
+                  
+                  <Card className="m-10 shadow-none ">
+                  <CardHeader>
+                      <CardTitle>
+                      <h1 className="text-4xl font-montserrat absolute right-20">Lorem Ipsum</h1>
+                      </CardTitle>
+                  </CardHeader>
+                  <CardContent className="">
+                      <Image
+                        alt="teeth"
+                        src="/eg2.jpg"
+                     
+                        width={150}
+                        height={150}/>
+                      <Image
+                        alt="teeth"
+                        src="/eg1.jpg"
+                      
+                        width={150}
+                        height={150}/>
+
+                  </CardContent>
+                  <CardFooter>
+                  </CardFooter>
+              </Card>
+                  
+ 
         </div>
     )
 }

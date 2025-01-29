@@ -68,7 +68,7 @@ export default function Home(){
     backgroundImage: 'url(/chair2blur.jpg)', 
   }
 
-  
+
 
 
   return(
@@ -124,44 +124,6 @@ export default function Home(){
         </Card>
         </div>
       
-
-        <div className="grid grid-auto-fit m-10 gap-2">
-              <Card style={Img2Style} className=" p-5">
-                <CardHeader>
-                <CardTitle className="text-xl font-bold font-montserrat text-white">Implants: A Brief History</CardTitle>
-                <CardDescription className="text-white">Smile Studio Kenya</CardDescription>
-                </CardHeader>
-                <CardContent className=" text-white">
-                Most patients may not automatically associate the word “implants” with oral health. 
-                Most patients may also not know much about the history of dental implants, 
-                and the role they have played and continue to play in restorative dental health.
-                With over 95% success rates, dental implants are an excellent tooth replacement solution.
-                </CardContent>
-                <Link href="/news">
-                <CardFooter className="text-ssblue hover:text-white cursor-pointer">
-                  read more <MoveRight className="ml-4 mt-1"/>
-                </CardFooter>
-                </Link>
-              </Card> 
-
-              <Card style={Img3Style} className="p-5">
-                <CardHeader>
-                <CardTitle className="text-xl font-bold font-montserrat text-white">Why you should find out if you might have gum disease?</CardTitle  >
-                <CardDescription className="text-white">Smile Studio Kenya</CardDescription>
-                </CardHeader>
-                <CardContent className=" text-white">
-                Gum disease is when your gums become swollen, sore or infected. 
-                Gum disease may not cause pain as it gets worse, 
-                so many don’t often notice that they have it until it’s too late. 
-                What are the signs of gum disease?
-                </CardContent>
-                <Link href="/news">
-                <CardFooter className="text-ssblue hover:text-white cursor-pointer" >
-                  read more <MoveRight className="ml-4 mt-1"/>
-                </CardFooter>
-                </Link>
-              </Card>          
-        </div>
       <Footer></Footer>
     </div>
 
