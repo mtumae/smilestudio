@@ -32,12 +32,8 @@ export default function BlogDetails({
    if (postByID.isLoading) return (  
     <div>
         <NavBar></NavBar>
-        <div className="flex flex-col space-y-3 m-20">
-        <div className="space-y-2">
-        <Skeleton className="h-96 w-full" />
-    </div>
-  </div>
-  </div>);
+        <Skeleton className="h-96 w-full mt-10" />
+    </div>);
 
 
 

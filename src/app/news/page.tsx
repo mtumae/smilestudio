@@ -29,29 +29,32 @@ import {
 import Link from "next/link"
   
 
-
-  const posts = {
-    title : "",
-    subtitle: "",
-    author: "Smile Studio Kenya",
-    body: "",
-  }
-
   const Img1Style ={
     backgroundImage: 'url(/homepageblur.jpg)',
     backgroundSize: 'cover', 
     backgroundPosition: 'center',  
-    display: 'flex',
     justifyContent: 'center',
-    alignItems: 'left',
     padding: '20px',
-
   };
 
 
+
   const Img2Style ={
-    backgroundImage: 'url(/eg1.jpg)',
+    backgroundImage: 'url(/mansmiling.jpg)',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    justifyContent: 'center',
     padding: '20px',
+  }
+
+  const Img3Style ={
+    backgroundImage: 'url(/womansmiling.jpg)',
+    justifyContent: 'left',
+    alignItems: 'left',
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',  
+    padding: '20px',
+    
   }
 
 export default function News(){
@@ -60,55 +63,94 @@ export default function News(){
     return(
         <div>
             <NavBar></NavBar>
-            <div className="grid grid-auto-fit gap-4 ">
+            <div className="grid grid-auto-fit gap-4">
                   { posts.data?.map(( post ) =>
 
 
                   <div className="m-10 border-ssblack border-y-darkgray shadow-lg" key={post.id}>
-                    <Card style={Img1Style} className="rounded-sm"></Card>
+                    <Card  className="rounded-sm border-t-ssblue border-t-4"></Card>
                     <div className="bg-white w-full p-10">
-                    <h1 className="bg-white ">{post.title}</h1>
-                    <h1 className="text-sm text-ssgray">{post.name}</h1>
+                      <h1 className="bg-white ">{post.title}</h1>
+                      <h1 className="text-sm text-ssgray">{post.name}</h1>
 
-                    <Link href={`/news/${post.id}`}>
-                    {post.body?.slice(0, 120)}... 
-                    
-                      <div className="flex flex-row pb-2">
-                        <MoveRight className=""/>
+                      <Link href={`/news/${post.id}`}>
+                        {post.body?.slice(0, 120)}... 
+                        <div className="flex flex-row pb-2">
+                          <MoveRight className=""/>
                         </div>
-                    </Link>
-                    </div>
+                      </Link>
+                      </div>
                     </div>
                   )}
 
-                  </div>
+            </div>
+
+                  <div className="grid grid-cols-1 w-full gap-10 ">
                   
-                  <Card className="m-10 shadow-lg">
-                  <CardHeader>
-                      <CardTitle>
-                      <h1 className="text-4xl text-ssgray font-montserrat absolute right-20">Lorem Ipsum</h1>
-                      </CardTitle>
-                  </CardHeader>
+                  <Card style={Img3Style} className="shadow-lg m-10 ">
                   <CardContent className="m-10">
                       <Image
                         alt="teeth"
                         src="/eg2.jpg"
-                        className="rounded-sm"
-                        width={150}
-                        height={150}/>
+                        className="rounded-sm mb-3"
+                        width={200}
+                        height={200}/>
                       <Image
                         alt="teeth"
                         src="/eg1.jpg"
-                        className="m-10 rounded-sm"
-                        width={150}
-                        height={150}/>
+                        className="rounded-sm"
+                        width={200}
+                        height={200}/>
 
+                        <Card className=" w-auto justify-self-end mt-20  border-none">
+                          <CardHeader className="text-4xl font-montserrat ">
+                                Jane doe
+                          </CardHeader>
+                          <CardContent className="text-sm">
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                          Praesent eget ipsum blandit, tempor nunc a, facilisis elit. 
+                          Sed et mi in orci malesuada mollis. Duis in ipsum in nibh pellentesque volutpat. 
+                          Curabitur et libero fringilla, lobortis nibh dignissim, maximus sapien. 
+                          In metus libero, eleifend sed purus a, cursus finibus urna. Aliquam a risus libero. 
+                          </CardContent>
+                        </Card>
                   </CardContent>
-                  <CardFooter>
-                  </CardFooter>
               </Card>
-                  
- 
+
+              <Card style={Img2Style} className="m-10">
+                <CardContent className="m-10">
+                <Image
+                        alt="teeth"
+                        src="/eg5.jpg"
+                        className="rounded-sm mb-3 justify-self-end"
+                        width={200}
+                        height={150}/>
+                      <Image
+                        alt="teeth"
+                        src="/eg6.jpg"
+                        className="rounded-sm justify-self-end"
+                        width={200}
+                        height={200}/>
+
+                        <Card className="mt-12">
+                          <CardHeader className="text-4xl font-montserrat ">
+                            John Doe
+                          </CardHeader>
+                          
+                          <CardContent className="m-4">
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                          Praesent eget ipsum blandit, tempor nunc a, facilisis elit. 
+                          Sed et mi in orci malesuada mollis. Duis in ipsum in nibh pellentesque volutpat. 
+                          Curabitur et libero fringilla, lobortis nibh dignissim, maximus sapien. 
+
+                          </CardContent>
+                        </Card>
+
+
+                </CardContent>
+              </Card>
+             <Footer></Footer>
+            </div>
         </div>
     )
 }

@@ -68,9 +68,6 @@ export default function Home(){
     backgroundImage: 'url(/chair2blur.jpg)', 
   }
 
-
-
-
   return(
     <div className="overflow-x-hidden">
       <NavBar></NavBar>
@@ -122,7 +119,17 @@ export default function Home(){
           </Breadcrumb>
           </CardContent>
         </Card>
+
+        
+
+
+
+
+
         </div>
+
+        
+
       
       <Footer></Footer>
     </div>
