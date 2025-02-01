@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.article {
+    @apply flex flex-col gap-3 text-lg tracking-wide mb-20;
+}
+
+.article > h1{
+    @apply font-montserrat text-4xl text-ssblack;
+}
