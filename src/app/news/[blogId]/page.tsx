@@ -44,7 +44,6 @@ export default function BlogDetails({
         <NavBar></NavBar>
            <h1>News post {blogId}</h1>
 
-
            <Card className="border-none shadow-none ">
             <CardHeader className="justify-self-center mb-10 items-center">
                 <h1 className="text-2xl">{postByID.data?.title}</h1>

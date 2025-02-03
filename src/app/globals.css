@@ -4,9 +4,18 @@
 
 
 .article {
-    @apply flex flex-col gap-3 text-lg tracking-wide mb-20;
+    @apply flex flex-col gap-3 text-lg tracking-wide m-20 ;
 }
 
 .article > h1{
-    @apply font-montserrat text-4xl text-ssblack;
+    @apply text-4xl font-montserrat mb-10;
+}
+
+
+.article > p{
+    @apply text-sm
+}
+
+img{
+    @apply rounded-sm h-1/3 w-44;
 }

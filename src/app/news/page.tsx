@@ -27,6 +27,7 @@ import {
     CarouselPrevious,
   } from "~/components/ui/carousel"
 import Link from "next/link"
+import { getCategorisedArticles } from "~/lib/articles"
   
 
   const Img1Style ={
@@ -59,14 +60,13 @@ import Link from "next/link"
 
 export default function News(){
     const posts = api.post.getLatest.useQuery()
+    
   
     return(
         <div>
             <NavBar></NavBar>
             <div className="grid grid-auto-fit gap-4">
                   { posts.data?.map(( post ) =>
-
-
                   <div className="m-10 border-ssblack border-y-darkgray shadow-lg" key={post.id}>
                     <Card  className="rounded-sm border-t-ssblue border-t-4"></Card>
                     <div className="bg-white w-full p-10">
@@ -82,6 +82,7 @@ export default function News(){
                       </div>
                     </div>
                   )}
+                  
 
             </div>
 
@@ -142,11 +143,8 @@ export default function News(){
                           Praesent eget ipsum blandit, tempor nunc a, facilisis elit. 
                           Sed et mi in orci malesuada mollis. Duis in ipsum in nibh pellentesque volutpat. 
                           Curabitur et libero fringilla, lobortis nibh dignissim, maximus sapien. 
-
                           </CardContent>
                         </Card>
-
-
                 </CardContent>
               </Card>
              <Footer></Footer>
