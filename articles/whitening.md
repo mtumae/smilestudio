@@ -1,12 +1,13 @@
 ---
 title: "Teeth whitening: Demystified"
 category: "business"
-date: "02-02-2025"
+date: "21/11/2025"
 
 ---
 
+# Teeth whitening: Demystified
 
-What is teeth whitening?
+**What is teeth whitening?**
 
 Teeth whitening refers to the process of lightening the natural colour of your teeth.
 
@@ -14,7 +15,7 @@ There is a common misconception that after having your teeth whitened you will b
 
 At Smile Studio our dentists work closely with you to choose the shade that suits you best.
 
-Why would I need to have my teeth whitened?
+**Why would I need to have my teeth whitened?**
 
 Teeth tend to become discoloured as we grow older. This discolouration is sometimes as a result of extrinsic staining which is caused by drinks such as tea, coffee and red wine, or habits such as smoking.
 
@@ -24,17 +25,17 @@ Staining under the surface (intrinsic) of the teeth is sometimes caused by certa
 
 If you have discoloured teeth visit Smile Studio, where our dentists will identify the cause of discolouration, and determine the best treatment plan for you.
 
-Does it work?
+**Does it work?**
 
 Tooth whitening can be an excellent way to improve the overall appearance of your teeth and smile. Once the procedure is complete you should follow the below tips to ensure your teeth and smile remain your chosen shade of white:
 
-1.  Brush your teeth twice a day;
+- Brush your teeth twice a day
 
-2. Reduce your intake of teeth staining food and drinks;
+    - Reduce your intake of teeth staining food and drinks
 
-3. Visit your dentist at least once every six months, or as often as she/he recommends.
+    - Visit your dentist at least once every six months, or as often as she/he recommends.
 
-Is the treatment “guaranteed” for a period of time?
+**Is the treatment “guaranteed” for a period of time?**
 
 Whitened teeth can remain the same shade for up to 3 years, but this varies from person to person. Smoking, drinking a lot of red wine, tea and coffee can stain your teeth and reduce the white effect.
 
@@ -44,7 +45,7 @@ What is the difference between professional whitening and whitening toothpastes?
 
 Whitening toothpastes can be effective at removing stains, but they cannot change the shade of your teeth.
 
-Is it safe?
+**Is it safe?**
 
 While there are DIY teeth whitening kits, teeth should only be whitened by a dentist, a dental hygienist, or a dental therapist. This is because your gums may be sensitive to the chemical used in whitening procedures. If you experience any sensitivity during the process a dental professional can manage this adequately to avoid any damage to your teeth or gums.
 

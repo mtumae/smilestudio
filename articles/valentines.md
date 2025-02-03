@@ -1,7 +1,7 @@
 ---
 title: "Have a Danger-free Valentine's Day"
 category: "Sports"
-date: "03-02-2025"
+date: "21/11/2025"
 ---
 
 We all know that eating excessive amounts of sugar can lead to tooth decay but few of us know that it's not the sugar itself that causes damage but the series of events that take place after we've wolfed down our favourite sweet treat.
@@ -30,6 +30,6 @@ We hope you have a Happy Valentine's day. If in doubt as to whether you're Valen
 
 From the team at Smile Studio...with love. 
 
-Xoxo
+
 
  
