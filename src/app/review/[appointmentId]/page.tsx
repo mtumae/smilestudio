@@ -7,7 +7,7 @@ import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { Star, SendHorizontal, CheckCircle2 } from "lucide-react";
 import { toast } from "~/hooks/use-toast";
-import { submitReview } from "./actions";
+import { api } from "~/trpc/react";
 
 export default function ReviewPage({ 
   params 
@@ -18,7 +18,23 @@ export default function ReviewPage({
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [feedback, setFeedback] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitReviewMutation = api.review.submitReview.useMutation({
+    onSuccess: () => {
+      setIsSubmitted(true);
+      toast({
+        title: "Thank you for your feedback!",
+        description: "Your review has been submitted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Failed to submit review",
+        description: error.message || "Please try again later.",
+      });
+    },
+  });
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -29,32 +45,10 @@ export default function ReviewPage({
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      const result = await submitReview({
-        rating,
-        feedback: feedback || undefined,
-      });
-
-      if (!result.success) {
-        throw new Error(result.error);
-      }
-      
-      setIsSubmitted(true);
-      toast({
-        title: "Thank you for your feedback!",
-        description: "Your review has been submitted successfully.",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Failed to submit review",
-        description: "Please try again later.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    submitReviewMutation.mutate({
+      rating,
+      feedback: feedback || undefined,
+    });
   };
 
   const containerVariants = {
@@ -86,43 +80,42 @@ export default function ReviewPage({
                   </div>
 
                   <div className="flex justify-center space-x-4">
-  {[1, 2, 3, 4, 5].map((value) => (
-    <button
-      key={value}
-      onClick={() => setRating(value)}
-      onMouseEnter={() => setHoveredRating(value)}
-      onMouseLeave={() => setHoveredRating(0)}
-      className={`relative p-2 cursor-pointer focus:outline-none transition-transform ${
-        rating === value ? 'scale-110' : ''
-      }`}
-    >
-      <Star 
-        size={48}
-        className={`transition-all duration-200 ${
-          value <= (hoveredRating || rating)
-            ? "fill-yellow-500 text-yellow-500 drop-shadow-lg" // Changed to yellow-500 for more vibrant gold
-            : "text-gray-300"
-        } ${
-          value <= rating 
-            ? "scale-105 transform-gpu"
-            : ""
-        }`}
-        style={{
-          // Adding explicit fill and stroke for better browser compatibility
-          fill: value <= (hoveredRating || rating) ? '#EAB308' : 'none',
-          stroke: value <= (hoveredRating || rating) ? '#EAB308' : 'currentColor'
-        }}
-      />
-      {value <= rating && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="absolute inset-0 bg-yellow-400/20 rounded-full blur-sm -z-10"
-        />
-      )}
-    </button>
-  ))}
-</div>
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button
+                        key={value}
+                        onClick={() => setRating(value)}
+                        onMouseEnter={() => setHoveredRating(value)}
+                        onMouseLeave={() => setHoveredRating(0)}
+                        className={`relative p-2 cursor-pointer focus:outline-none transition-transform ${
+                          rating === value ? 'scale-110' : ''
+                        }`}
+                      >
+                        <Star 
+                          size={48}
+                          className={`transition-all duration-200 ${
+                            value <= (hoveredRating || rating)
+                              ? "fill-yellow-500 text-yellow-500 drop-shadow-lg"
+                              : "text-gray-300"
+                          } ${
+                            value <= rating 
+                              ? "scale-105 transform-gpu"
+                              : ""
+                          }`}
+                          style={{
+                            fill: value <= (hoveredRating || rating) ? '#EAB308' : 'none',
+                            stroke: value <= (hoveredRating || rating) ? '#EAB308' : 'currentColor'
+                          }}
+                        />
+                        {value <= rating && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute inset-0 bg-yellow-400/20 rounded-full blur-sm -z-10"
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
 
                   {rating > 0 && (
                     <motion.div
@@ -162,10 +155,10 @@ export default function ReviewPage({
 
                   <Button
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
+                    disabled={submitReviewMutation.isPending}
                     className="w-full bg-ssblue hover:bg-blue-600 text-white py-6 rounded-xl shadow-lg transition-all"
                   >
-                    {isSubmitting ? (
+                    {submitReviewMutation.isPending ? (
                       <div className="flex items-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         Submitting...

@@ -33,6 +33,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 import Footer from "./footer/page";
 import NavBar from "~/components/ui/navigation";
 import { FiFacebook, FiInstagram } from "react-icons/fi";
+import { TopReviews } from "./ReviewComponent";
 
 const navLinks = [
   {name:"Home", href:"/"},
@@ -77,6 +78,7 @@ export default function Home(){
         <p className="text-othergray font-helvetica">Our core treatments include Invisalign, braces, pediatric dentistry, smile design cases and teeth whitening and cleaning.</p>
         </section>
       </div>
+
       <div className="grid grid-auto-fit m-20">
         <Card className="justify-items-center border-none shadow-none">
         <Calendar className="mt-10 " />
@@ -127,6 +129,7 @@ export default function Home(){
 
 
         </div>
+       <TopReviews/>
 
         
 

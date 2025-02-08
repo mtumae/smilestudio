@@ -1,1 +1,0 @@
-ALTER TABLE "smilestudio_conversation_participants" DROP CONSTRAINT "smilestudio_conversation_participants_user_id_smilestudio_user_id_fk";

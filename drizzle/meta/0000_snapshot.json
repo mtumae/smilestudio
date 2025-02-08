@@ -1,5 +1,5 @@
 {
-  "id": "f2549ab9-2a7f-4393-8483-bc7e3e60f7ef",
+  "id": "7a41dfc6-f9ca-4735-a0f9-652f4ef92a93",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -256,8 +256,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.smilestudio_messages": {
-      "name": "smilestudio_messages",
+    "public.conversation_participants": {
+      "name": "conversation_participants",
       "schema": "",
       "columns": {
         "id": {
@@ -266,9 +266,127 @@
           "primaryKey": true,
           "notNull": true
         },
-        "customer_id": {
-          "name": "customer_id",
-          "type": "varchar(255)",
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'patient'"
+        },
+        "last_read": {
+          "name": "last_read",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conversation_participants_conversation_id_conversations_id_fk": {
+          "name": "conversation_participants_conversation_id_conversations_id_fk",
+          "tableFrom": "conversation_participants",
+          "tableTo": "conversations",
+          "columnsFrom": [
+            "conversation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "conversation_participants_user_id_smilestudio_user_id_fk": {
+          "name": "conversation_participants_user_id_smilestudio_user_id_fk",
+          "tableFrom": "conversation_participants",
+          "tableTo": "smilestudio_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.conversations": {
+      "name": "conversations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'support'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -287,53 +405,20 @@
         },
         "status": {
           "name": "status",
-          "type": "message_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'unread'"
-        },
-        "responded_by": {
-          "name": "responded_by",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "response_content": {
-          "name": "response_content",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "is_starred": {
-          "name": "is_starred",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "response_time": {
-          "name": "response_time",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "default": "'sent'"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "smilestudio_messages_customer_id_smilestudio_user_id_fk": {
-          "name": "smilestudio_messages_customer_id_smilestudio_user_id_fk",
-          "tableFrom": "smilestudio_messages",
-          "tableTo": "smilestudio_user",
+        "messages_conversation_id_conversations_id_fk": {
+          "name": "messages_conversation_id_conversations_id_fk",
+          "tableFrom": "messages",
+          "tableTo": "conversations",
           "columnsFrom": [
-            "customer_id"
+            "conversation_id"
           ],
           "columnsTo": [
             "id"
@@ -341,12 +426,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "smilestudio_messages_responded_by_smilestudio_user_id_fk": {
-          "name": "smilestudio_messages_responded_by_smilestudio_user_id_fk",
-          "tableFrom": "smilestudio_messages",
+        "messages_sender_id_smilestudio_user_id_fk": {
+          "name": "messages_sender_id_smilestudio_user_id_fk",
+          "tableFrom": "messages",
           "tableTo": "smilestudio_user",
           "columnsFrom": [
-            "responded_by"
+            "sender_id"
           ],
           "columnsTo": [
             "id"
@@ -584,6 +669,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "rating": {
           "name": "rating",
           "type": "integer",
@@ -701,55 +792,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.smilestudio_typing_indicators": {
-      "name": "smilestudio_typing_indicators",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "conversation_id": {
-          "name": "conversation_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "smilestudio_typing_indicators_user_id_smilestudio_user_id_fk": {
-          "name": "smilestudio_typing_indicators_user_id_smilestudio_user_id_fk",
-          "tableFrom": "smilestudio_typing_indicators",
-          "tableTo": "smilestudio_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.smilestudio_user": {
       "name": "smilestudio_user",
       "schema": "",
@@ -862,17 +904,7 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "public.message_status": {
-      "name": "message_status",
-      "schema": "public",
-      "values": [
-        "unread",
-        "read",
-        "responded"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "_meta": {

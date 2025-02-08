@@ -8,6 +8,7 @@ import { settingsRouter } from "./routers/settings";
 import { businessMessageRouter } from "./routers/messaging";
 import { patientRouter } from "./routers/patients";
 import { chatRouter } from "./routers/chat";
+import { reviewRouter } from "./routers/reviews";
 
 /**
  * This is the primary router for your server.
@@ -22,7 +23,8 @@ export const appRouter = createTRPCRouter({
   settings: settingsRouter,
   messages: businessMessageRouter,
   patient: patientRouter,
-  analytics:analyticsRouter
+  analytics:analyticsRouter,
+  review: reviewRouter
 });
 
 // export type definition of API

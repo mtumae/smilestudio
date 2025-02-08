@@ -1,9 +1,3 @@
-DO $$ BEGIN
- CREATE TYPE "public"."message_status" AS ENUM('unread', 'read', 'responded');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "smilestudio_account" (
 	"user_id" varchar(255) NOT NULL,
 	"type" varchar(255) NOT NULL,
@@ -37,17 +31,29 @@ CREATE TABLE IF NOT EXISTS "smilestudio_appointments" (
 	"google_event_id" varchar(255)
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "smilestudio_messages" (
+CREATE TABLE IF NOT EXISTS "conversation_participants" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"customer_id" varchar(255) NOT NULL,
+	"conversation_id" integer NOT NULL,
+	"user_id" text NOT NULL,
+	"role" text DEFAULT 'patient' NOT NULL,
+	"last_read" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "conversations" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"subject" text,
+	"type" text DEFAULT 'support' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "messages" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"conversation_id" integer NOT NULL,
+	"sender_id" text NOT NULL,
 	"content" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"status" "message_status" DEFAULT 'unread' NOT NULL,
-	"responded_by" varchar(255),
-	"response_content" text,
-	"is_starred" boolean DEFAULT false,
-	"response_time" timestamp,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"status" text DEFAULT 'sent' NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "smilestudio_patients" (
@@ -81,6 +87,7 @@ CREATE TABLE IF NOT EXISTS "smilestudio_revenues" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "smilestudio_satisfaction_ratings" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" text,
 	"rating" integer NOT NULL,
 	"feedback" text,
 	"date" timestamp NOT NULL
@@ -97,13 +104,6 @@ CREATE TABLE IF NOT EXISTS "smilestudio_settings" (
 	"key" varchar(255) NOT NULL,
 	"description" varchar(255) NOT NULL,
 	"isSet" boolean DEFAULT true
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "smilestudio_typing_indicators" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"user_id" varchar(255) NOT NULL,
-	"conversation_id" varchar(255) NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "smilestudio_user" (
@@ -133,13 +133,25 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "smilestudio_messages" ADD CONSTRAINT "smilestudio_messages_customer_id_smilestudio_user_id_fk" FOREIGN KEY ("customer_id") REFERENCES "public"."smilestudio_user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "conversation_participants" ADD CONSTRAINT "conversation_participants_conversation_id_conversations_id_fk" FOREIGN KEY ("conversation_id") REFERENCES "public"."conversations"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "smilestudio_messages" ADD CONSTRAINT "smilestudio_messages_responded_by_smilestudio_user_id_fk" FOREIGN KEY ("responded_by") REFERENCES "public"."smilestudio_user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "conversation_participants" ADD CONSTRAINT "conversation_participants_user_id_smilestudio_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."smilestudio_user"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "messages" ADD CONSTRAINT "messages_conversation_id_conversations_id_fk" FOREIGN KEY ("conversation_id") REFERENCES "public"."conversations"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "messages" ADD CONSTRAINT "messages_sender_id_smilestudio_user_id_fk" FOREIGN KEY ("sender_id") REFERENCES "public"."smilestudio_user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -158,12 +170,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "smilestudio_session" ADD CONSTRAINT "smilestudio_session_user_id_smilestudio_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."smilestudio_user"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "smilestudio_typing_indicators" ADD CONSTRAINT "smilestudio_typing_indicators_user_id_smilestudio_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."smilestudio_user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
